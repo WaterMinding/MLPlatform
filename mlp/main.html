@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+   <style>
+        .func{
+            width: 98%;
+            height: 93%;
+            text-align: center;
+            background-color: #ce6b6b;
+            border: #0b0b0b solid 2px;
+            position: absolute;
+            top: 5%;
+             
+             
+        }
+        .name-left{
+            border: #0b0b0b solid 2px;
+            width: 100%;
+            height: 10%;
+            background-color: #ddb720;
+            text-align: center;
+            position: relative;
+            top: 10%;
+          
+            
+        }
+        .name-right{
+            border: #0b0b0b solid 2px;
+            width: 100%;
+            height: 10%;
+            text-align: center;
+            background-color: #e1ac1a;
+            position: relative;
+            top: 10%;
+            
+
+        }
+        .box-left{
+            width: 15%;
+            height: 100%;
+            background-color: #f8f4f4;
+            text-align: center;
+            position: absolute;
+             
+             
+        
+        }
+        .choice{
+            width: 100%;
+            height: 30px;
+            background-color: #bfb074;
+            position: relative;
+            top: 15%;
+             
+            text-align: center;
+            line-height: 30px;
+            margin-block-end: 20px;
+             
+        }
+        .box-right{
+            width: 15%;
+            height: 100%;
+            background-color: #f8f4f4;
+            position: absolute;
+            top: 0%;
+            right: 0%; 
+
+
+        }
+        .box-middle{
+            width: 70%;
+            height: 5%;
+            background-color: #f8f4f4;
+             border: #0b0b0b solid 2px;
+            border-collapse: collapse;
+
+            position: relative;
+            top:0%;
+            left: 15%;
+          
+
+            
+            
+        }
+        .icon{
+            width: 10%;
+            height: 100%;
+            background-color: #f8f4f4;
+            border-collapse: collapse;
+            position: relative;
+            top: 0%;
+            left:0%;
+            text-align: center;
+        }
+        .box-main{
+            width: 70%;
+            height: 95%;
+            background-color: #7fc2ee;
+            position: relative;
+            top: 0%;
+            left: 15%;
+            border: #0b0b0b solid 2px;
+            border-collapse: collapse;                      
+
+        }
+        table{
+            width: 100%;
+            height: 10%;
+            border-collapse: collapse;
+            border: #0b0b0b solid 2px;
+            position: relative;
+            top: 15%;
+            left:0%;
+
+
+        }
+        td{
+            border: #0b0b0b solid 2px;
+        }
+    </style>
+    <style>
+       .nav {
+            width: 98%;
+            height: 5%;
+            background-color: #f8f4f4;
+            position:absolute;
+            top: 0;
+            }
+        .nav_inline{
+            display: inline-block;
+            width:5%; 
+            height:100%; 
+            position: relative;
+            left: 30%; 
+            }
+            
+    </style>
+ 
+</head>
+<body>
+    <!-- 功能区 -->
+    <div class="func">
+        
+         
+         
+
+        <div class="box-left">
+            <div class="name-left">算子池选择</div>
+             <button class="choice">算法一</button>
+             <button class="choice">算法二</button>
+             <button class="choice">算法三</button>
+             <button class="choice">算法四</button>
+             <button class="choice">算法五</button>
+         <!-- 这里可以添加更多的算法n按钮，和上面的格式一致 -->
+        </div>
+
+        <div class="box-right">
+            <div class="name-right">上传新数据</div>
+            <table class="data">
+                <tr>
+                    <td>icon</td>
+                    <td>名称</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>编号</td>
+                </tr>
+            </table>
+
+
+
+        </div>
+
+        <div class="box-middle">
+            <button class="icon">add</button>
+            <button class="icon">delete</button>
+            <button class="icon">edit</button>
+
+
+        </div>
+
+         <div class="box-main">
+
+
+
+         </div>
+       
+
+
+   </div> 
+    
+     <!-- 导航栏 -->
+
+    <div class="nav"> 
+        <button class="nav_inline">file</button>
+        <button class="nav_inline">help</button>
+         <!-- 这里可以添加更多的导航栏按钮 -->
+    </div>
+
+</body>
+</html>
