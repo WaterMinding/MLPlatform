@@ -3,9 +3,11 @@ import os
 import time
 import base64
 from io import BytesIO
+from pandas import DataFrame as DF
 from exception import ParamTypeException
 from exception import PathNotExistsException
 from exception import RedundantOperationException
+from exception import ObjectNotExistsException
 
 
 # 类型检查函数
@@ -32,27 +34,57 @@ class Cell:
         # 定义块属性：块类型
         self.__type = cell_type
 
+        # 定义块属性：元数据词典
+        self.__meta_dict = {}
 
     # 返回块ID方法
     def get_cell_id(self) -> str:
         return self.__id
 
-
     # 返回块类型方法
     def get_cell_type(self) -> str:
         return self.__type
+    
+    # 覆盖元数据词典方法
+    def set_meta(self,new_meta_dict:dict):
+
+        self.__meta_dict = new_meta_dict
+    
+    # 元数据词典新增数据方法
+    def add_meta(self,additive_meta_dict:dict):
+
+        self.__meta_dict.update(additive_meta_dict)
+    
+    # 元数据词典删除数据方法
+    def delete_meta(self,delete_key):
+
+        if delete_key in self.__meta_dict.keys():
+            return self.__meta_dict.pop(delete_key)
+    
+    # 查询元数据方法
+    def query_meta(self,query_key):
+
+        if query_key in self.__meta_dict.keys():
+            return self.__meta_dict[query_key]
+        else:
+            return None
+
+    # 返回元数据字典方法
+    def get_meta(self):
+
+        return self.__meta_dict
 
 
 # 定义文本块类（继承Cell类）
 class TextCell(Cell):
 
     # 构造方法
-    def __init__(self,docu_name:str):
+    def __init__(self,docu_id:str):
 
         # 检查参数类型
-        type_check(docu_name,'docu_name',str)
+        type_check(docu_id,'docu_id',str)
 
-        cell_id = docu_name + 'Text' + str(time.time())
+        cell_id = docu_id + 'Text' + str(time.time())
         cell_type = 'Text'
 
         # 构造父类对象
@@ -60,106 +92,312 @@ class TextCell(Cell):
 
         # 定义文本块属性：文本字符串
         self.__text = None
-    
 
-    # 更新文本字符串方法
+        # 删除元数据字典属性
+        self.__meta_dict = None
+    
+    # 覆盖文本字符串方法
     def set_text(self,new_text:str):
 
         # 检查参数类型
         type_check(new_text,'new_text',str)
 
-        # 更新文本字符串
+        # 覆盖文本字符串
         self.__text = new_text
     
-
     # 返回文本字符串方法
     def get_text(self) -> str:
 
         return self.__text
-    
-
-    # 导出文本方法
-    def export_txt(self,path:str):
-
-        # 检查参数类型
-        type_check(path,'path',str)
-
-        # 检查与修饰路径
-        if not os.path.exists(path):
-            raise PathNotExistsException('导出路径不存在')
-        path = path + '\\'
-
-        # 创建、打开、编辑并保存txt文件
-        with open(path + self.get_cell_id() + '.txt','w') as file:
-            file.write(self.get_text())
 
 
-# 定义图表块类
+# 定义图像块类
 class ChartCell(Cell):
 
     # 构造方法
-    def __init__(self, docu_name:str):
+    def __init__(self, docu_id:str):
 
         # 检查参数类型
-        type_check(docu_name,'docu_name',str)
+        type_check(docu_id,'docu_id',str)
 
-        cell_id = docu_name + 'Chart' + str(time.time())
+        cell_id = docu_id + 'Chart' + str(time.time())
         cell_type = 'Chart'
 
         # 构造父类对象
         super().__init__(cell_id,cell_type)
 
-        # 定义图表块属性：figure对象
-        self.__figure = None
-    
 
-    # 注入figure对象方法
-    def set_figure(self,plt_figure):
+# 定义算子块类
+class OperatorCell(Cell):
 
-        # 检查是否已经存在figure对象
-        if self.__figure == None:
-            
-            # 注入对象
-            self.__figure = plt_figure
-
-        else:
-            raise RedundantOperationException('重复注入figure对象')
-
-    
-    # 返回figure对象方法
-    def get_figure(self):
-
-        return self.__figure
-    
-
-    # 返回图像编码
-    def get_base64(self):
-
-        # 图像保存至缓冲区
-        buf = BytesIO()
-        self.__figure.savefig(buf,format = 'png')
-        buf.seek(0)
-
-        # 图像base64编码
-        image_base64 = base64.b64encode(buf.read()).decode('utf-8')
-
-        # 包装为URL
-        src = f"data:image/png;base64,{image_base64}"
-
-        return src
-    
-    
-    # 保存图像方法
-    def save_figure(self,path:str):
+    # 构造方法
+    def __init__(self, docu_id:str):
 
         # 检查参数类型
-        type_check(path,'path',str)
+        type_check(docu_id,'docu_id',str)
 
-        # 检查与修饰路径
-        if not os.path.exists(path):
-            raise PathNotExistsException('导出路径不存在')
-        path = path + '\\'
+        cell_id = docu_id + 'Operator' + str(time.time())
+        cell_type = 'Operator'
 
-        # 保存图像
-        self.__figure.savefig(path + self.get_cell_id() + '.png')
+        # 构造父类对象
+        super().__init__(cell_id,cell_type)
 
+
+# 定义数据块类
+class DataCell(Cell):
+
+    # 构造方法
+    def __init__(self, docu_id:str):
+
+        # 检查参数类型
+        type_check(docu_id,'docu_id',str)
+
+        cell_id = docu_id + 'Data' + str(time.time())
+        cell_type = 'Data'
+
+        # 构造父类对象
+        super().__init__(cell_id,cell_type)
+
+        # 定义数据块属性：Dataframe对象引用
+        self.__df = None
+    
+    # 覆盖DataFrame引用方法
+    def set_df(self,new_df:DF):
+
+        self.__df = new_df
+    
+    # 返回DataFrame引用方法
+    def get_df_pointer(self):
+
+        return self.__df
+    
+    # 获取DataFrame对象的复制体
+    def get_df_copy(self):
+
+        return self.__df.copy()
+
+
+# 定义文档类
+class Docu:
+
+    # 构造方法
+    def __init__(self,docu_name:str):
+
+        # 检查参数类型
+        type_check(docu_name,'docu_name',str)
+        
+        # 定义文档类属性：文档名
+        self.__docu_name = docu_name
+
+        # 定义文档类属性：文档ID
+        self.__docu_id = self.__docu_name + str(time.time())
+        
+        # 定义文档类属性：块索引列表
+        self.__cell_list = []
+        
+        # 定义文档类属性：新增算子块池
+        self.__new_op_pool = []
+
+        # 定义文档类属性：数据块池
+        self.__data_pool = []
+    
+    # 类方法：按照ID查找某个块列表中的块
+    @classmethod
+    def find_cell(cls,cell_id,cell_lst):
+
+        # 检查参数类型
+        type_check(cell_id,'cell_id',str)
+        type_check(cell_lst,'cell_lst',list)
+
+        # 设置块存在标志
+        flag = False
+
+        # 初始化now_loc
+        now_loc = None
+
+        # 寻找块
+        for now_loc in range(len(cell_lst)):
+
+            if cell_id == cell_lst[now_loc].get_cell_id():
+                flag = True
+                break
+        
+        # 返回寻找结果
+        return flag,now_loc
+
+    # 返回文档名方法
+    def get_docu_name(self):
+
+        return self.__docu_name
+    
+    # 返回文档id方法
+    def get_docu_id(self):
+
+        return self.__docu_id
+    
+    # 返回块索引列表方法
+    def get_cell_list(self):
+
+        return self.__cell_list
+    
+    # 块索引列表增加块方法
+    def add_cell_to_list(self,cell):
+
+        self.__cell_list.append(cell)
+    
+    # 块索引列表删除块方法
+    def delete_cell_from_list(self,cell_id:str):
+
+        # 参数类型检查
+        type_check(cell_id,'cell_id',str)
+
+        # 寻找块位置
+        flag,now_loc = Docu.find_cell(cell_id,self.__cell_list)
+        
+        # 确定是否删除了某个块
+        if flag:
+
+            # 如果找到了块，则删除块
+            deleted_cell = self.__cell_list.pop(now_loc)
+
+        else:
+            deleted_cell = None
+            raise ObjectNotExistsException(str(cell_id) + '不存在于块索引列表')
+    
+        # 返回被删除项
+        return deleted_cell
+
+    # 块索引列表调整块位置方法
+    def arrange_loc_in_list(self,cell_id:str,new_loc:int):
+
+        # 参数类型检查
+        type_check(cell_id,'cell_id',str)
+        type_check(new_loc,'new_loc',int)
+
+        # 寻找块位置
+        flag,now_loc = Docu.find_cell(cell_id,self.__cell_list)
+        
+        # 从列表中弹出所选块并插入新位置
+        if flag:
+            now_cell = self.__cell_list.pop(now_loc)
+            self.__cell_list.insert(new_loc,now_cell)
+        else:
+            raise ObjectNotExistsException(str(cell_id) + '不存在于块索引列表')
+    
+    # 块索引列表通过ID检索块方法
+    def get_cell_from_list(self,cell_id:str):
+
+        # 参数类型检查
+        type_check(cell_id,'cell_id',str)
+
+        # 寻找块位置
+        flag,now_loc = Docu.find_cell(cell_id,self.__cell_list)
+
+        # 获取块
+        if flag:
+            now_cell = self.__cell_list[now_loc]
+        else:
+            now_cell = None
+            raise ObjectNotExistsException(str(cell_id) + '不存在于块索引列表')
+        
+        # 返回块
+        return now_cell
+    
+    # 返回新增算子块池方法
+    def get_new_op_pool(self):
+
+        return self.__new_op_pool
+
+    # 新增算子块池增加块方法
+    def add_cell_to_op_pool(self,cell):
+
+        # 参数类型检查
+        type_check(cell,'cell',OperatorCell)
+
+        # 判断算子池中是否已经存在该块
+        flag,now_loc = Docu.find_cell(cell.get_cell_id(),self.__new_op_pool)
+
+        if not flag:
+            self.__new_op_pool.append(cell)
+        else:
+            raise RedundantOperationException(str(cell.get_cell_id()) + '已经存在于算子池，勿重复添加')
+    
+    # 新增算子池删除块方法
+    def delete_cell_from_op_pool(self,cell_id):
+
+        # 确定查找块位置
+        flag,now_loc = Docu.find_cell(cell_id,self.__new_op_pool)
+        
+        # 删除块
+        if flag:
+            now_cell = self.__new_op_pool.pop(now_loc)
+        else:
+            now_cell = None
+            raise ObjectNotExistsException(str(cell_id) + '不存在于算子池')
+    
+        # 返回被删除块
+        return now_cell
+    
+    # 新增算子池ID检索块方法
+    def get_cell_from_op_pool(self,cell_id):
+
+        # 确定查找块位置
+        flag,now_loc = Docu.find_cell(cell_id,self.__new_op_pool)
+
+        # 获取目标块
+        if flag:
+            now_cell = self.__new_op_pool[now_loc]
+        else:
+            now_cell = None
+            raise ObjectNotExistsException(str(cell_id) + '不存在于算子池')         
+        
+        # 返回目标块
+        return now_cell
+    
+    # 返回数据块池方法
+    def get_data_pool(self):
+
+        return self.__data_pool
+    
+    # 数据块池增加块方法
+    def add_cell_to_data_pool(self,cell):
+
+        # 判断数据块池中是否已经存在该块
+        flag,now_loc = Docu.find_cell(cell.get_cell_id(),self.__data_pool)
+
+        if not flag:
+            self.__data_pool.append(cell)
+        else:
+            raise RedundantOperationException(str(cell.get_cell_id()) + '已经存在于数据块池，勿重复添加')
+
+    # 数据块池删除块方法
+    def delete_cell_from_data_pool(self,cell_id):
+
+        # 判断数据块池中是否存在该块
+        flag,now_loc = Docu.find_cell(cell_id,self.__data_pool)
+
+        # 删除块
+        if flag:
+            now_cell = self.__data_pool.pop(now_loc)
+        else:
+            now_cell = None
+            raise ObjectNotExistsException(str(cell_id) + '不存在于数据块池')
+
+        # 返回被删除块
+        return now_cell
+
+    # 数据池ID检索块方法
+    def get_cell_from_data_pool(self,cell_id):
+
+        # 查找目标块位置
+        flag,now_loc = Docu.find_cell(cell_id,self.__data_pool)
+
+        # 获取目标块
+        if flag:
+            now_cell = self.__data_pool[now_loc]
+        else:
+            now_cell = None
+            raise ObjectNotExistsException(str(cell_id) + '不存在于数据块池')
+        
+        # 返回目标块
+        return now_cell

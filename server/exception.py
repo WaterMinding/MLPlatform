@@ -23,3 +23,11 @@ class PathNotExistsException(Exception):
     def __init__(self, message:str):
         self.message = message
         super().__init__(self.message)
+
+# 对象不存在异常
+class ObjectNotExistsException(Exception):
+
+    # 构造方法
+    def __init__(self, message:str):
+        self.message = message
+        super().__init__(self.message)
