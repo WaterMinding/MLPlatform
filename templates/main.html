@@ -5,198 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
+    <!--以下是外部导入的css文件-->
+
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./style-nav.css">
  
 
-
-
-
-   <style>
-        .func{
-            width: 98%;
-            height: 93%;
-            text-align: center;
-            background-color: #ce6b6b;
-            border: #0b0b0b solid 1px;
-            border-collapse: collapse;
-            position: absolute;
-            top: 5%;
-            background-color: transparent;
-             
-             
-        }
-        select{
-             
-            width: 80%;
-            height: 10%;
-            background-color: transparent;
-            text-align: center;
-            line-height: 60px;
-          
-            border: #111111 solid 1px;
-            text-align: center;
-            position: absolute;
-            left: 10%;
-            top: 5%;
-            box-shadow: inset 0px 0px 10px #a7a7a7;
-          
-            
-        }
-
-        .name-left p{
-            color: #161515;
-            font-family: 'Courier New', Courier, monospace;
-        }
-        .name-right{
-             
-            width: 80%;
-            height: 10%;
-            text-align: center;
-            background-color: transparent;
-            position: relative;
-            top: 10%;
-            left: 10%;
-            border: #111010 solid 1px;
-            box-shadow: inset 0px 0px 10px #a7a7a7;
-
-        }
-        .name-right p{
-            color: #161616;
-            font-family: 'Courier New', Courier, monospace;
-        }
-
-        .box-left{
-            width: 15%;
-            height: 100%;
-            background-color: #070707;
-            text-align: center;
-            position: absolute;
-            background-color: transparent;
-             
-             
-        
-        }
-        
-        .box-right{
-            width: 15%;
-            height: 100%;
-            background-color:transparent;
-            position: absolute;
-            top: 0%;
-            right: 0%; 
-            
     
-
-
-        }
-        .choice{
-            width: 80%;
-            height: 30px;
-            
-            background-color: #dfdedc98;
-            border: #0b0b0b solid 1px;
-            position: relative;
-            top:20%;
-            left: 10%;
-             
-            outline: none;
-            line-height: 30px;
-            margin-block-end: 20px;
-            box-shadow: 10px 10px 10px #a7a7a7;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-             
-        }
-   
-        .box-middle{
-            width: 70%;
-            height: 5%;
-            background-color:transparent;
-            border-left: #0b0b0b 1px solid;  
-            border-right: #0b0b0b 1px solid;  
-            border-collapse: collapse;
-
-            position: relative;
-            top:0%;
-            left: 15%;
-          
-
-            
-            
-        }
-        .icon{
-            width: 7%;
-            height: 100%;
-            background-color: transparent;
-            border: #1a1919 solid 1px;
-            position: relative;
-            top: 0%;
-            left:0%;
-            text-align: center;
-            box-shadow: inset 0px 0px 10px #504f4f;
-        }
-        .icon p{
-            color: #434441;
-        }
-        .box-main{
-            width: 70%;
-            height: 95%;
-            background-color: transparent;
-            position: relative;
-            top: 0%;
-            left: 15%;
-            border: #111010 solid 1px;
-            border-collapse: collapse;                      
-
-        }
-        table{
-            width: 80%;
-            height: 10%;
-            border: #030303 solid 1px;
-            border-collapse: collapse;
-            box-shadow: inset 0px 0px 10px #a7a7a7; 
-            position: relative;
-            top: 15%;
-            left:10%;
-
-
-        }
-        td{
-            border: #0b0b0b solid 1px;
-            color: #0e0d0d;
-        }
-    </style>
-    <style>
-       .nav {
-            width: 98%;
-            height: 5%;
-            background-color: #dfdfdf;
-            border-left: #0b0b0b 1px solid;  
-            border-right: #0b0b0b 1px solid; 
-            border-top: #0b0b0b 1px solid;  
-            border-bottom: #0b0b0b 1px solid;
-            border-collapse: collapse;
-            position:absolute;
-            top: 0;
-            }
-        .nav_inline{
-            display: inline-block;
-            width:5%; 
-            height:100%; 
-            position: relative;
-            left: 5%; 
-            top: 0;
-            border-top: none;
-            border-left: none;
-            border-right: none;
-            border-bottom: none;
-            background-color: #d3d2cf;
-            box-shadow: inset 0px 0px 10px #5b5b5b;
-            }
-            
-    </style>
  
 </head>
 <body>
-    <!-- 功能区 -->
+    <!-- 功能区，以下是html文件 -->
     <div class="func">
         
          
@@ -212,11 +31,11 @@
                 <option value="5">有监督</option>
                  
             </select>
-             <button class="choice" style="display:block;" id="choice1">算法一</button>
-             <button class="choice" style="display:none;" id="choice2">算法二</button>
-             <button class="choice" style="display:none;" id="choice3">算法三</button>
-             <button class="choice" style="display:none;" id="choice4">算法四</button>
-             <button class="choice" style="display:none;" id="choice5">算法五</button>
+             <button class="choice" style="display:block;" id="choice1" draggable="true">算法一</button>
+             <button class="choice" style="display:none;" id="choice2" draggable="true">算法二</button>
+             <button class="choice" style="display:none;" id="choice3" draggable="true">算法三</button>
+             <button class="choice" style="display:none;" id="choice4" draggable="true">算法四</button>
+             <button class="choice" style="display:none;" id="choice5" draggable="true">算法五</button>
          <!-- 这里可以添加更多的算法n按钮，和上面的格式一致 -->
         </div>
 
@@ -263,50 +82,9 @@
          <!-- 这里可以添加更多的导航栏按钮 -->
     </div>
 
-    <!-- 以下是js代码 -->
-     <script>
-        const menu = document.getElementById("name-left");
-        const choice1 = document.getElementById("choice1");
-        const choice2 = document.getElementById("choice2");
-        const choice3 = document.getElementById("choice3");
-        const choice4 = document.getElementById("choice4");
-        const choice5 = document.getElementById("choice5");
-
-        menu.addEventListener("change", function() {
-            const value = menu.value;
-            choice1.style.display = "none";
-            choice2.style.display = "none";
-            choice3.style.display = "none";
-            choice4.style.display = "none";
-            choice5.style.display = "none";
-            if (value == 1) {
-                choice1.style.display = "block";
- 
-            } else if (value == 2) {
-                choice2.style.display = "block";
-            } else if (value == 3) {
-                choice3.style.display = "block";
-            } else if (value == 4) {
-                choice4.style.display = "block";
-                 
-            } else if (value == 5) {
-                choice5.style.display = "block";
-            }
-        });
-
-
-
-
-
-
-     </script>
-
-
-
-
-
-
-
+    <!-- 以下是左侧算法功能外部导入的js文件 -->
+     <script src="./myscript.js"></script>
+     
 
 
 
