@@ -23,10 +23,10 @@ async def read_root(request:Request):
     return templates.TemplateResponse("main.html", context)
 
 @app.post(path = '/docu', tags = ['新建文档'])
-async def create_docu(name:str):
+async def create_docu(docu_name:str = "untitled"):
 
     global document
-    document = Docu(name)
+    document = Docu(docu_name)
 
     return{
         "docu_id":document.get_docu_id()
