@@ -1,5 +1,6 @@
 import uvicorn
 from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from docu import Docu
 
@@ -11,6 +12,7 @@ document = None
  
 # 配置 Jinja2 模板目录
 templates = Jinja2Templates(directory = "templates")
+app.mount("/static", StaticFiles(directory="templates"), name="static")
  
 # 主界面接口
 @app.get(path = "/", tags = ['获取主界面'])

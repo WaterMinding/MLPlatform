@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="./style-nav.css">
  
-
+    <link rel="stylesheet" href="{{ url_for('static', path='style-nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
     
  
 </head>
@@ -83,7 +84,8 @@
     </div>
 
     <!-- 以下是左侧算法功能外部导入的js文件 -->
-     <script src="./myscript.js"></script>
+    <script src="{{ url_for('static', path='myscript.js') }}"></script>
+    <script src="./myscript.js"></script>
      
 
 
