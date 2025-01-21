@@ -34,6 +34,9 @@ class Cell:
         # 定义块属性：块类型
         self.__type = cell_type
 
+        # 归属集合
+        self.__belong_set = set()
+
         # 定义块属性：元数据词典
         self.__meta_dict = {}
 
@@ -73,6 +76,34 @@ class Cell:
     def get_meta(self):
 
         return self.__meta_dict
+    
+    # 获取归属集合方法
+    def get_belong_set(self):
+
+        return self.__belong_set
+    
+    # 覆盖归属集合方法
+    def set_belong_set(self,new_set):
+
+        self.__belong_set = new_set
+    
+    # 归属集合增加方法
+    def add_belong_set(self,new_belong):
+
+        self.__belong_set.add(new_belong)
+    
+    # 归属集合删除方法
+    def remove_belong_set(self,target_belong):
+
+        if target_belong in self.__belong_set:
+
+            self.__belong_set.remove(target_belong)
+    
+    # 归属列表清空方法
+    def clr_belong_set(self):
+
+        self.__belong_set.clear()
+        
 
 
 # 定义文本块类（继承Cell类）
@@ -92,9 +123,6 @@ class TextCell(Cell):
 
         # 定义文本块属性：文本字符串
         self.__text = None
-
-        # 删除元数据字典属性
-        self.__meta_dict = None
     
     # 覆盖文本字符串方法
     def set_text(self,new_text:str):
@@ -194,9 +222,6 @@ class Docu:
         
         # 定义文档类属性：块索引列表
         self.__cell_list = []
-        
-        # 定义文档类属性：新增算子块池
-        self.__new_op_pool = []
 
         # 定义文档类属性：数据块池
         self.__data_pool = []
@@ -243,6 +268,8 @@ class Docu:
     # 块索引列表增加块方法
     def add_cell_to_list(self,cell):
 
+        cell.add_belong_set(self,"cell_list")
+
         self.__cell_list.append(cell)
     
     # 块索引列表删除块方法
@@ -259,6 +286,7 @@ class Docu:
 
             # 如果找到了块，则删除块
             deleted_cell = self.__cell_list.pop(now_loc)
+            deleted_cell.remove_belong_set("cell_list")
 
         else:
             deleted_cell = None
@@ -303,57 +331,6 @@ class Docu:
         # 返回块
         return now_cell
     
-    # 返回新增算子块池方法
-    def get_new_op_pool(self):
-
-        return self.__new_op_pool
-
-    # 新增算子块池增加块方法
-    def add_cell_to_op_pool(self,cell):
-
-        # 参数类型检查
-        type_check(cell,'cell',OperatorCell)
-
-        # 判断算子池中是否已经存在该块
-        flag,now_loc = Docu.find_cell(cell.get_cell_id(),self.__new_op_pool)
-
-        if not flag:
-            self.__new_op_pool.append(cell)
-        else:
-            raise RedundantOperationException(str(cell.get_cell_id()) + '已经存在于算子池，勿重复添加')
-    
-    # 新增算子池删除块方法
-    def delete_cell_from_op_pool(self,cell_id):
-
-        # 确定查找块位置
-        flag,now_loc = Docu.find_cell(cell_id,self.__new_op_pool)
-        
-        # 删除块
-        if flag:
-            now_cell = self.__new_op_pool.pop(now_loc)
-        else:
-            now_cell = None
-            raise ObjectNotExistsException(str(cell_id) + '不存在于算子池')
-    
-        # 返回被删除块
-        return now_cell
-    
-    # 新增算子池ID检索块方法
-    def get_cell_from_op_pool(self,cell_id):
-
-        # 确定查找块位置
-        flag,now_loc = Docu.find_cell(cell_id,self.__new_op_pool)
-
-        # 获取目标块
-        if flag:
-            now_cell = self.__new_op_pool[now_loc]
-        else:
-            now_cell = None
-            raise ObjectNotExistsException(str(cell_id) + '不存在于算子池')         
-        
-        # 返回目标块
-        return now_cell
-    
     # 返回数据块池方法
     def get_data_pool(self):
 
@@ -367,6 +344,7 @@ class Docu:
 
         if not flag:
             self.__data_pool.append(cell)
+            cell.add_belong_set("data_pool")
         else:
             raise RedundantOperationException(str(cell.get_cell_id()) + '已经存在于数据块池，勿重复添加')
 
@@ -379,6 +357,7 @@ class Docu:
         # 删除块
         if flag:
             now_cell = self.__data_pool.pop(now_loc)
+            now_cell.remove_belong_set("data_pool")
         else:
             now_cell = None
             raise ObjectNotExistsException(str(cell_id) + '不存在于数据块池')
