@@ -1,7 +1,7 @@
 import json
 import asyncio
 import docu
-from docu import Docu
+from docu import Docu,Cell
 from exception import ObjectNotExistsException
 from exception import ParamTypeException
 
@@ -11,7 +11,11 @@ trash_bin = []
 # 新建文档
 async def create_docu(docu_name:str):
 
-    return Docu(docu_name)
+    # 创建文档
+    document = Docu(docu_name)
+
+    return document
+
 
 
 # 保存文档
@@ -27,7 +31,7 @@ async def open_docu():
 
 
 # 增加块（块列表）
-async def add_cell(document:Docu,cell_type:str) -> str:
+async def add_cell(document:Docu,cell_type:str,meta_dict:dict = None) -> Cell:
 
     # 检查文档对象
     if document == None:
@@ -36,25 +40,28 @@ async def add_cell(document:Docu,cell_type:str) -> str:
 
     # 创建块
     if cell_type == "Text":
-        cell = docu.TextCell(document.get_docu_id)
+        cell = docu.TextCell(document.get_docu_id())
     elif cell_type == "Operator":
-        cell = docu.OperatorCell(document.get_docu_id)
+        cell = docu.OperatorCell(document.get_docu_id())
     elif cell_type == "Data":
-        cell = docu.DataCell(document.get_docu_id)
+        cell = docu.DataCell(document.get_docu_id())
     elif cell_type == "Chart":
-        cell = docu.ChartCell(document.get_docu_id)
+        cell = docu.ChartCell(document.get_docu_id())
     else:
         raise ParamTypeException("块类型不正确")
     
     # 添加块
     document.add_cell_to_list(cell)
 
+    # 如果传入了元数据字典，则赋给新块
+    cell.set_meta(meta_dict)
+
     # 返回块ID
-    return cell.get_cell_id()
+    return cell
 
 
 # 删除块（块列表）
-async def remove_cell(document:Docu,cell_id:str) -> str:
+async def remove_cell(document:Docu,cell_id:str) -> Cell:
 
     # 检查文档对象
     if document == None:
@@ -67,7 +74,7 @@ async def remove_cell(document:Docu,cell_id:str) -> str:
     except Exception as e:
         return None
     
-    return cell.get_cell_id()
+    return cell
 
 
 # 排列块

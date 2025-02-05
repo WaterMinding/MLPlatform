@@ -268,7 +268,7 @@ class Docu:
     # 块索引列表增加块方法
     def add_cell_to_list(self,cell):
 
-        cell.add_belong_set(self,"cell_list")
+        cell.add_belong_set("cell_list")
 
         self.__cell_list.append(cell)
     
