@@ -20,10 +20,12 @@ class TextCell:
         # 根据传入的文本配置字典，初始化文本块
         try:
             # 文本块ID
-            self.__cell_id:str = text_config['cell_id']
+            self_cell_id:str = text_config['cell_id']
+            self.__cell_id = self_cell_id
 
             # 文本字符串
-            self.__text:str = text_config['text']
+            self_text:str = text_config['text']
+            self.__text = self_text
 
         # 处理可能存在的异常
         except Exception as e:
@@ -75,16 +77,20 @@ class OpCell:
         # 根据传入的算子配置字典，初始化算子块
         try:
             # 算子块ID
-            self.__cell_id:str = op_config['cell_id']
+            self_cell_id:str = op_config['cell_id']
+            self.__cell_id = self_cell_id
 
             # 算子类型
-            self.__op_type:str = op_config['op_type']
+            self_op_type:str = op_config['op_type']
+            self.__op_type = self_op_type
 
             # 参数字典
-            self.__params:dict = op_config['params']
+            self_params:dict = op_config['params']
+            self.__params = self_params
 
             # 变量字典
-            self.__vars:dict = op_config['vars']
+            self_vars:dict = op_config['vars']
+            self.__vars = self_vars
 
         # 处理可能存在的异常
         except Exception as e:
@@ -157,30 +163,22 @@ class Element:
     def __init__(self,elem_type:str, docu_inner_path:str):
         
         # 根据传入的参数，初始化元素
-        try:
-            # 保存元素类型
-            self.__elem_type = elem_type
+        # 保存元素类型
+        self.__elem_type:str = elem_type
 
-            # 保存文档文件内路径
-            self.__docu_inner_path = docu_inner_path
+        # 保存文档文件内路径
+        self.__docu_inner_path:str = docu_inner_path
         
-        # 处理可能出现的异常
-        except Exception as e:
-
-            # 抛出元素构造异常
-            raise mlp_exception.ConstructionError(
-                "Element"
-            )
     
     # 生成元素配置字典方法
     @typechecked
-    async def get_elem_config(self, with_data:bool, docu_path:str):
+    async def get_elem_config(self, with_data:bool, docu_path:str|None):
 
         # 如果with_data为True
         if with_data:
 
             # 读取元素数据
-            data = await asyncio.to_thread(self.__get_data(docu_path))
+            data = await asyncio.to_thread(self.__get_data, docu_path)
 
             # 将数据和元素类型打包成字典
             elem_config = {
@@ -204,7 +202,6 @@ class Element:
             return elem_config
     
     # 读取元素数据方法
-    @typechecked
     def __get_data(self, docu_path:str):
 
         # 打开文档文件
@@ -247,6 +244,9 @@ class ChartCell:
                     # 在文件内的图像数据组目录中创建组
                     file['Chart'].create_group(self.__cell_id)
 
+                # 通过HDFStore重新打开文件
+                with pd.HDFStore(self.__docu_path) as store:
+
                     # 初始化计数器
                     counter = 0
 
@@ -255,16 +255,13 @@ class ChartCell:
 
                         # 保存元素数据
                         elem_data = elem_config['elem_data']
-                        file['Chart'][self.__cell_id].create_dataset(
-                            name = str(counter),
-                            data = elem_data
-                        )
+                        store[f'Chart/{self.__cell_id}/e_{counter}'] = elem_data
 
                         # 保存元素对象
                         self.__elem_list.append(
                             Element(
                                 elem_type = elem_config['elem_type'],
-                                docu_inner_path = f'Chart/{self.__cell_id}/{counter}'
+                                docu_inner_path = f'Chart/{self.__cell_id}/e_{counter}'
                             )
                         )
 
@@ -274,9 +271,6 @@ class ChartCell:
             # 如果元素数据类型为str
             elif chart_config['elem_data_type'] == 'str':
 
-                # 初始化计数器
-                counter = 0
-
                 # 逐个生成并保存元素对象及其数据于文件内的路径
                 for elem_config in elem_config_list:
 
@@ -284,12 +278,9 @@ class ChartCell:
                     self.__elem_list.append(
                         Element(
                             elem_type = elem_config['elem_type'],
-                            docu_inner_path = f'Chart/{self.__cell_id}/{counter}'
+                            docu_inner_path = elem_config['elem_data']
                         )
                     )
-
-                    # 更新计数器
-                    counter += 1
 
             # 如果元素数据类型为其他
             else:
@@ -317,7 +308,10 @@ class ChartCell:
 
         # 构建协程列表
         coro_list = [
-            elem.get_config(with_data) for elem in self.__elem_list
+            elem.get_elem_config(
+                with_data,
+                self.__docu_path
+            ) for elem in self.__elem_list
         ]
 
         # 并发执行协程列表,获取元素列表
@@ -381,7 +375,7 @@ class DataCell:
 
     # 构造方法
     @typechecked
-    def __init__(self, docu_path:str, data_config:dict):
+    def __init__(self, data_config:dict, docu_path:str):
 
         # 根据传入的数据配置字典及参数，初始化数据块对象
         try:
@@ -460,7 +454,7 @@ class DataCell:
         for var in var_list:
 
             # 如果新变量与现有变量名冲突
-            if var.var_name in self.__var_dict.keys():
+            while var.var_name in self.__var_dict.keys():
 
                 # 如果原变量名没有(n)
                 if not re.search(r'\(\d+\)$',var.var_name):
@@ -503,11 +497,15 @@ class DataCell:
                 axis = 1
             )
 
+            # 清空变量对象中的数据
+            var.df_register = None
+            var.usage = None
+
             # 保存变量对象
             self.__var_dict[var.var_name] = var
         
         # 保存文件数据
-        self.__save_file()
+        await asyncio.to_thread(self.__save_data)
 
         # 清空DF寄存对象
         self.__df_register = None
@@ -523,7 +521,7 @@ class DataCell:
         if var_name in self.__var_dict.keys():
 
             # 读取对应列数据
-            var_data = await asyncio.to_thread(self.__load_column(var_name))
+            var_data = await asyncio.to_thread(self.__load_column,var_name)
 
             # 将数据打包为变量对象
             var = Variable(var_str)
@@ -543,7 +541,7 @@ class DataCell:
     async def replace_data(self,var_list:list[Variable]):
 
         # 加载文件数据
-        await self.__load_file()
+        await asyncio.to_thread(self.__load_data)
         
         # 遍历变量列表
         for var in var_list:
@@ -554,6 +552,13 @@ class DataCell:
                 # 替换列数据
                 self.__df_register[var.var_name] = var.df_register
 
+                # 清空变量对象中的数据
+                var.df_register = None
+                var.usage = None
+
+                # 替换变量
+                self.__var_dict[var.var_name] = var
+
             # 如果变量名不存在于变量字典
             else:
 
@@ -561,17 +566,17 @@ class DataCell:
                 raise mlp_exception.DataQueryError(var.var_name)
 
         # 保存文件数据
-        await self.__save_file()
+        await asyncio.to_thread(self.__save_data)
 
     # 生成数据配置字典方法
-    def gen_config(self):
+    def get_config(self):
 
         # 遍历变量字典，生成变量字符串列表
         var_str_list = []
         for var_name in self.__var_dict.keys():
 
             # 生成变量字符串
-            var_str = self.__var_dict[var_name].gen_var_str()
+            var_str = self.__var_dict[var_name].get_var_str()
 
             # 将变量字符串添加到变量字符串列表
             var_str_list.append(var_str)
@@ -579,5 +584,6 @@ class DataCell:
         # 生成数据配置字典，并返回
         return {
             'cell_id': self.__cell_id,
-            'var_list': var_str_list
+            'var_str_list': var_str_list
         }
+
