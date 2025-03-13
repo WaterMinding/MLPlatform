@@ -1,2 +1,8 @@
 # 忽略Vscode配置
 .vscode/settings.json
+
+# 忽略测试报告
+./html_cov/
+
+# 忽略字节码
+**/__pycache__/
