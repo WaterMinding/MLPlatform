@@ -1,0 +1,10 @@
+# Config of MLP/PLOT
+
+# 绘图目录
+[plotter_dict]
+
+# 散点图
+Scatter = "scatter.Scatter"
+
+# 折线图
+Line = "line.Line"

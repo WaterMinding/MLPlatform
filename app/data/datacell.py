@@ -10,8 +10,8 @@ from pandas import DataFrame as DF
 from duckdb import DuckDBPyConnection as DBC
 
 # 导入自定义模块
-from .mlp_exceptions import VariableNotFoundError
-from .mlp_exceptions import ConstructionError
+from ..mlp_exceptions import VariableNotFoundError
+from ..mlp_exceptions import ConstructionError
 
 
 # 变量类
@@ -194,9 +194,12 @@ class DataCell:
                     
                     # 则在其末尾添加(1)
                     var.register.rename(
+                        
                         columns={
                             var.var_name: new_var_name
-                        }
+                        },
+
+                        inplace = True
                     )
 
                     # 更新变量名
@@ -217,9 +220,12 @@ class DataCell:
 
                     # 更新数据列名
                     var.register.rename(
+                        
                         columns={
                             var.var_name: new_var_name
-                        }
+                        },
+
+                        inplace = True
                     )
 
                     # 更新变量名

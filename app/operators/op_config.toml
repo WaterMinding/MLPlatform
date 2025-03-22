@@ -1,0 +1,7 @@
+# Config of MLP/OP
+
+# 算子目录
+[op_dict]
+
+# 线性回归算子
+LinearRegression = "linear_regression.LR"

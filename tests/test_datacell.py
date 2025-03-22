@@ -16,20 +16,14 @@ FILE_PATH = os.path.abspath(__file__)
 # 确定项目根目录
 TESTS = os.path.dirname(FILE_PATH)
 ROOT = os.path.dirname(TESTS)
-print(ROOT)
 
 # 添加项目根目录到系统路径
 sys.path.append(ROOT)
 
 # 导入自定义模块
 from app import DataCell, Variable
-from app.mlp_exceptions import ConstructionError
-from app.mlp_exceptions import VariableNotFoundError
-
-# 删除旧测试用数据库文件
-if os.path.exists(f"{TESTS}/duck.db"):
-    os.remove(f"{TESTS}/duck.db")
-
+from app import ConstructionError
+from app import VariableNotFoundError
 
 # 测试变量类
 class TestVariable(unittest.TestCase):
@@ -125,6 +119,9 @@ class TestDataCell(unittest.TestCase):
         with duckdb.connect(f"{TESTS}/duck.db") as conn:
 
             conn.sql("DROP TABLE data_12138")
+
+        # 删除测试用数据库文件
+        os.remove(f"{TESTS}/duck.db")
 
 
     # 测试构造方法
