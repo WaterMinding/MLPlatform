@@ -56,7 +56,6 @@ def plotter_entry(chart_config: ChartConfig):
         # 检查元素类型是否存在于绘图目录
         if elem_config['elem_type'] not in plotter_dir:
 
-            # 抛出异常
             raise PlotterNotFoundError(
                 f'{elem_config['elem_type']}'
             )
@@ -73,7 +72,6 @@ def plotter_entry(chart_config: ChartConfig):
         # 检查绘图类是否符合协议
         if not issubclass(clss, Plotter):
 
-            # 抛出异常
             raise TypeError(
                 '绘图类必须符合绘图类型协议\n' +
                 'Operator class must be subclass of Operator\

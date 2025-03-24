@@ -26,6 +26,9 @@ class LR:
 
     # 构造方法
     # 参数1：params - 模型参数字典
+        # 这个算子并不需要参数，
+        # 但是为了params放在variables前面，
+        # 这里没有使用默认值
     # 参数2：variables - 变量区字典
     @typechecked
     def __init__(
