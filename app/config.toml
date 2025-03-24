@@ -1,4 +1,5 @@
 # Config of MLP
 
 # 数据池文件路径
-data_pool_path = "E:/程序/项目文件夹/机器学习平台/Platform/mlp/data_pool.db"
+data_pool_path = "E:/程序/项目文件夹/机器学习平台/Platform/data_pool.db"
+
