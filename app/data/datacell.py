@@ -303,4 +303,3 @@ class DataCell:
 
         # 返回数据配置字典
         return config
-    

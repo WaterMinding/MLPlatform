@@ -24,7 +24,6 @@ class ConstructionError(Exception):
 class OperatorNotFoundError(Exception):
 
     def __init__(self, operator_name):
-        self.operator_name = operator_name
         super().__init__(
             f"未找到算子 '{operator_name}'。\n" + \
             f"Operator '{operator_name}' not found."
@@ -39,4 +38,15 @@ class PlotterNotFoundError(Exception):
         super().__init__(
             f"未找到绘图 '{plotter_name}'。\n" + \
             f"Plotter '{plotter_name}' not found."
+        )
+
+
+# 依赖缺失异常
+class DependencyError(Exception):
+
+    def __init__(self, dependency_name):
+        self.dependency_name = dependency_name
+        super().__init__(
+            f"未找到依赖 '{dependency_name}'。\n" + \
+            f"Dependency '{dependency_name}' not found."
         )
