@@ -10,6 +10,17 @@ class VariableNotFoundError(Exception):
         )
 
 
+# 数据不存在异常类
+class DataNotFoundError(Exception):
+
+    def __init__(self, data_name):
+        self.data_name = data_name
+        super().__init__(
+            f"未找到数据 '{data_name}'。\n" + \
+            f"Data '{data_name}' not found."
+        )
+
+
 # 构造失败异常类
 class ConstructionError(Exception):
 
@@ -49,4 +60,14 @@ class DependencyError(Exception):
         super().__init__(
             f"未找到依赖 '{dependency_name}'。\n" + \
             f"Dependency '{dependency_name}' not found."
+        )
+
+
+# 初始化未完成异常
+class InitializationError(Exception):
+
+    def __init__(self):
+        super().__init__(
+            f"未完成初始化。\n" + \
+            f"Initialization not completed."
         )
