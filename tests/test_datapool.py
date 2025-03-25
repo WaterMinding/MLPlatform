@@ -22,6 +22,7 @@ sys.path.append(ROOT)
 # 导入自定义库模块
 from app import DataPool
 from app import ConstructionError
+from app.protocols import DataConfig
 
 # 测试运行时数据池类
 class TestDataPool(unittest.TestCase):
@@ -29,26 +30,28 @@ class TestDataPool(unittest.TestCase):
     # 测试类初始化方法
     def setUp(self):
         
-        # 构造数据池配置字典
+        # 构造数据池配置
         self.pool_config = {
             
-            'data_12138': {
-                'cell_id': 'data_12138',
-                'var_str_list': [
+            'data_12138': DataConfig(
+                cell_id = 'data_12138',
+                cell_name = 'data_12138',
+                var_str_list = [
                     'var1:quan:data_12138',
                     'var2:quan:data_12138',
                     'var3:quan:data_12138'
                 ]
-            },
+            ),
 
-            'data_12345': {
-                'cell_id': 'data_12345',
-                'var_str_list': [
+            'data_12345': DataConfig(
+                cell_id = 'data_12345',
+                cell_name = 'data_12345',
+                var_str_list = [
                     'var1:quan:data_12345',
                     'var2:quan:data_12345',
                     'var3:quan:data_12345'
                 ]    
-            }
+            )
         }
 
         # 定义数据池文件路径
@@ -89,17 +92,17 @@ class TestDataPool(unittest.TestCase):
             # 传入错误路径
             DataPool('dasdas',self.pool_config)
         
-        # 构造错误的数据池配置字典
+        # 构造错误的数据池配置
         error_pool_config = deepcopy(self.pool_config)
-        error_pool_config['data_12345']['var_str_list'] = 'dasdas'
+        error_pool_config['data_12345'].var_str_list = 'dasdas'
 
         # 测试数据池构造异常
         with self.assertRaises(ConstructionError):
 
-            # 传入错误的数据池配置字典
+            # 传入错误的数据池配置
             DataPool(self.pool_path,error_pool_config)
         
-        # 传入正确的数据池配置字典
+        # 传入正确的数据池配置
         pool = DataPool(self.pool_path,self.pool_config)
 
         # 测试数据池文件路径
@@ -139,14 +142,14 @@ class TestDataPool(unittest.TestCase):
             data_cell_1.var_str_list,
             self.pool_config[
                 'data_12138'
-            ]['var_str_list']
+            ].var_str_list
         )
 
         self.assertEqual(
             data_cell_2.var_str_list,
             self.pool_config[
                 'data_12345'
-            ]['var_str_list']
+            ].var_str_list
         )
 
     # 测试添加数据块与获取数据块方法
@@ -167,12 +170,13 @@ class TestDataPool(unittest.TestCase):
 
         # 测试添加数据块
         pool.add_cell(
-            data_config = {
-                'cell_id': 'data_12149',
-                'var_str_list': [
+            data_config = DataConfig(
+                cell_id = 'data_12149',
+                cell_name = 'data_12149',
+                var_str_list = [
                     'var_1:cate:data_12149'
                 ]
-            }      
+            )
         )
 
         # 获取数据块
@@ -198,12 +202,12 @@ class TestDataPool(unittest.TestCase):
             ['var_1:cate:data_12149']
         )
 
-    # 测试获取数据池配置字典方法
+    # 测试获取数据池配置方法
     def test_get_config(self):
 
         # 输出测试信息
         print(
-            "\n测试运行时数据池类：获取数据池配置字典方法"
+            "\n测试运行时数据池类：获取数据池配置方法"
         )
 
         # 构造数据池
@@ -212,10 +216,10 @@ class TestDataPool(unittest.TestCase):
             self.pool_config
         )
 
-        # 获取数据池配置字典
+        # 获取数据池配置
         config = pool.get_config()
 
-        # 测试数据池配置字典
+        # 测试数据池配置
         self.assertEqual(
             config,
             self.pool_config

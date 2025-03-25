@@ -8,7 +8,8 @@ import tomllib as toml
 from typeguard import typechecked
 
 # 导入自定义模块
-from .protocols import Operator
+from ..protocols import OpConfig
+from ..protocols import Operator
 from ..mlp_exceptions import \
 OperatorNotFoundError
 
@@ -27,9 +28,7 @@ OP_CONFIG_PATH = os.path.dirname(
 # 参数2：variables - 算子变量字典
 @typechecked
 def op_entry(
-    op_name: str,
-    parameters: dict | None,
-    variables: dict | None, 
+    op_config: OpConfig
 ):
     
     # 读取配置文件
@@ -39,10 +38,15 @@ def op_entry(
     ) as file:
 
         # 加载配置文件
-        op_config = toml.load(file)
+        config = toml.load(file)
 
     # 获取算子目录
-    op_dir = op_config['op_dict']
+    op_dir = config['op_dict']
+
+    # 解包算子配置
+    op_name = op_config.op_name
+    parameters = op_config.parameters
+    variables = op_config.variables
         
     # 检查算子名是否存在于算子目录
     if op_name not in op_dir:

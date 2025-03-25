@@ -5,7 +5,7 @@ from fastapi import Body
 # 导入自定义模块
 from .services import initialize
 from .services import open_docu
-from .models import DocuConfig
+from .protocols import DocuConfig
 
 # 创建FastAPI实例
 app = FastAPI()

@@ -5,6 +5,7 @@ from copy import deepcopy
 
 # 导入第三方库模块
 import duckdb
+from pydantic import BaseModel
 from typeguard import typechecked
 from pandas import DataFrame as DF
 from duckdb import DuckDBPyConnection as DBC
@@ -12,6 +13,21 @@ from duckdb import DuckDBPyConnection as DBC
 # 导入自定义模块
 from ..mlp_exceptions import VariableNotFoundError
 from ..mlp_exceptions import ConstructionError
+
+
+# 定义数据配置协议
+# 为避免与protocols包的循环依赖
+# 这里将协议定义在data包中
+class DataConfig(BaseModel):
+
+    # 数据块ID
+    cell_id: str
+
+    # 数据表名
+    cell_name: str
+
+    # 变量列表
+    var_str_list: list[str]
 
 
 # 变量类
@@ -58,12 +74,12 @@ class DataCell:
 
     # 构造方法
     # 参数1：pool_path - 数据池文件路径
-    # 参数2：data_config - 数据配置字典
+    # 参数2：data_config - 数据配置
     @typechecked
     def __init__(
         self,
         pool_path: str,
-        data_config: dict
+        data_config: DataConfig
     ):
         
         try:
@@ -77,13 +93,16 @@ class DataCell:
                 raise FileNotFoundError(pool_path)
 
             # 读取数据块ID
-            self.__cell_id: str = data_config['cell_id']
+            self.__cell_id: str = data_config.cell_id
 
             # 生成变量对象列表
             var_list = map(
                 Variable,
-                data_config['var_str_list']
+                data_config.var_str_list
             )
+
+            # 读取数据名
+            self.__cell_name: str = data_config.cell_name
 
             # 生成变量字典
             self.__var_dict: dict[str, Variable] = {
@@ -93,10 +112,6 @@ class DataCell:
         except FileNotFoundError as fne:
 
             raise fne
-
-        except Exception as e:
-
-            raise ConstructionError('DataCell object')
 
     # 获取数据块ID方法
     @property
@@ -121,6 +136,12 @@ class DataCell:
     def pool_path(self) -> str:
 
         return self.__pool_path
+    
+    # 获取数据块名称方法
+    @property
+    def cell_name(self) -> str:
+
+        return self.__cell_name
 
     # 变量查询方法
     # 参数1：var_name - 变量名
@@ -289,17 +310,20 @@ class DataCell:
                 SELECT * FROM origin_data'
             )
     
-    # 获取数据配置字典方法
+    # 获取数据配置方法
     def get_config(self):
 
-        # 生成数据配置字典
+        # 生成数据配置
         config = {
-            'cell_id': self.cell_id,
+            'cell_id': self.__cell_id,
+            'cell_name': self.__cell_name,
             'var_str_list': [
                 self.__var_dict[var_name].to_string()
                 for var_name in self.__var_dict
             ]
         }
 
-        # 返回数据配置字典
+        config = DataConfig(**config)
+
+        # 返回数据配置
         return config

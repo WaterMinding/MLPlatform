@@ -1,5 +1,4 @@
 # 导入标准库模块
-from typing import TypedDict
 from typing import Protocol
 from typing import runtime_checkable
 
@@ -7,7 +6,7 @@ from typing import runtime_checkable
 from matplotlib.axes import Axes
 
 # 导入自定义模块
-from ..operators import ElemConfig
+from .typed_dicts import ElemConfig
 
 
 # 定义绘图类协议

@@ -27,6 +27,8 @@ sys.path.append(ROOT)
 # 导入自定义模块
 from app import plotter_entry
 from app import PlotterNotFoundError
+from app.protocols import ChartConfig
+from app.protocols import ElemConfig 
 
 
 # 测试绘图层
@@ -106,29 +108,33 @@ class Test_plotter_entry(unittest.TestCase):
             PlotterNotFoundError
         ):
             plotter_entry(
-                {
-                    'cell_num': 1,
-                    'elem_list': [{
-                        'elem_type': '123',
-                        'params': DF(
-                            {'x':[1,2,3]}
+                ChartConfig(
+                    cell_num = 1,
+                    elem_list = [
+                        ElemConfig(
+                            elem_type = '123',
+                            params = DF(
+                                {'x':[1,2,3]}
+                            )
                         )
-                    }]
-                }
+                    ]
+                )
             )
 
         # 测试绘图类不符合协议引发的异常
         with self.assertRaises(TypeError):
             plotter_entry(
-                {
-                    'cell_num': 1,
-                    'elem_list': [{
-                        'elem_type': 'TestPlotter',
-                        'params': DF(
-                            {'x':[1,2,3]}
+                ChartConfig(
+                    cell_num = 1,
+                    elem_list = [
+                        ElemConfig(
+                            elem_type = 'TestPlotter',
+                            params = DF(
+                                {'x':[1,2,3]}
+                            )
                         )
-                    }]
-                }
+                    ]
+                )
             )
     
     # 测试直线绘图器
@@ -137,21 +143,23 @@ class Test_plotter_entry(unittest.TestCase):
         # 输出测试信息
         print("\n测试绘图层：直线绘图器")
 
-        # 构造图像配置字典
-        config = {
-            'cell_num': 1,
-            'elem_list': [{
-                'elem_type': 'Line',
-                'params': DF({
-                    'x': [1, 2, 3],
-                    'y': [1, 2, 3],
-                })
-            }]
-        }
+        # 构造图像配置
+        config = ChartConfig(
+            cell_num = 1,
+            elem_list = [
+                ElemConfig(
+                    elem_type = 'Line',
+                    params = DF({
+                        'x': [1, 2, 3],
+                        'y': [1, 2, 3],
+                    })
+                )
+            ]
+        )
 
-        # 构造错误的图像配置字典
+        # 构造错误的图像配置
         config_error = deepcopy(config)
-        config_error['elem_list'][0]['params'] = DF({
+        config_error.elem_list[0].params = DF({
             'x': [1, 2, 3],
         })
 
@@ -177,21 +185,23 @@ class Test_plotter_entry(unittest.TestCase):
         # 输出测试信息
         print("\n测试绘图层：散点绘图器")
 
-        # 构造图像配置字典
-        config = {
-            'cell_num': 1,
-            'elem_list': [{
-                'elem_type': 'Scatter',
-                'params': DF({
-                    'x': [1, 2, 3],
-                    'y': [1, 2, 3],
-                })
-            }]
-        }
+        # 构造图像配置
+        config = ChartConfig(
+            cell_num = 1,
+            elem_list = [
+                ElemConfig(
+                    elem_type = 'Scatter',
+                    params = DF({
+                        'x': [1, 2, 3],
+                        'y': [1, 2, 3],
+                    })
+                )
+            ]
+        )
 
-        # 构造错误的图像配置字典
+        # 构造错误的图像配置
         config_error = deepcopy(config)
-        config_error['elem_list'][0]['params'] = DF({
+        config_error.elem_list[0].params = DF({
             'x': [1, 2, 3],
         })
 
@@ -216,26 +226,26 @@ class Test_plotter_entry(unittest.TestCase):
         # 输出测试信息
         print("\n测试绘图层：绘图器协同")
 
-        # 构造图像配置字典
-        config = {
-            'cell_num': 1,
-            'elem_list': [
-                {
-                    'elem_type': 'Scatter',
-                    'params': DF({
+        # 构造图像配置
+        config = ChartConfig(
+            cell_num = 1,
+            elem_list = [
+                ElemConfig(
+                    elem_type = 'Scatter',
+                    params = DF({
                         'x': [1, 2, 3],
                         'y': [1, 2, 3],
                     })
-                },
-                {
-                    'elem_type': 'Line',
-                    'params': DF({
+                ),
+                ElemConfig(
+                    elem_type = 'Line',
+                    params = DF({
                         'x': [1, 2, 3],
                         'y': [1, 2, 3],
                     })
-                }
+                )
             ]
-        }
+        )
 
         # 调用绘图器入口函数
         result = plotter_entry(config)

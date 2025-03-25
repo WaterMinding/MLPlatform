@@ -11,8 +11,8 @@ from typeguard import typechecked
 from matplotlib.figure import Figure
 
 # 导入自定义模块
-from .protocols import Plotter
-from ..operators import ChartConfig
+from ..protocols import Plotter
+from ..protocols import ChartConfig
 from ..mlp_exceptions import PlotterNotFoundError
 
 
@@ -26,7 +26,7 @@ PLOTTER_CONFIG_PATH = os.path.dirname(
 
 
 # 绘图层入口函数
-# 参数1：chart_config - 绘图配置字典
+# 参数1：chart_config - 绘图配置
 @typechecked
 def plotter_entry(chart_config: ChartConfig):
 
@@ -36,10 +36,10 @@ def plotter_entry(chart_config: ChartConfig):
         mode = 'rb'
     ) as file:
         
-        plotter_config = tomllib.load(file)
+        config = tomllib.load(file)
     
     # 获取绘图目录
-    plotter_dir = plotter_config['plotter_dict']
+    plotter_dir = config['plotter_dict']
 
     # 创建Figure对象
     fig = Figure()
@@ -48,20 +48,20 @@ def plotter_entry(chart_config: ChartConfig):
     ax = fig.add_subplot()
 
     # 分析图表配置
-    elem_list = chart_config['elem_list']
+    elem_list = chart_config.elem_list
 
     # 调用绘图函数
     for elem_config in elem_list:
 
         # 检查元素类型是否存在于绘图目录
-        if elem_config['elem_type'] not in plotter_dir:
+        if elem_config.elem_type not in plotter_dir:
 
             raise PlotterNotFoundError(
-                f'{elem_config['elem_type']}'
+                f'{elem_config.elem_type}'
             )
 
         # 获取绘图类
-        plotter = plotter_dir[elem_config['elem_type']]
+        plotter = plotter_dir[elem_config.elem_type]
         modu, clss = plotter.split('.')
         modu = importlib.import_module(
             name = '.' + modu,

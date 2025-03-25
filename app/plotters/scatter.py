@@ -5,7 +5,7 @@ from typeguard import typechecked
 from pandas import DataFrame as DF
 
 # 导入自定义模块
-from ..operators import ElemConfig
+from ..protocols import ElemConfig
 
 # 设置中文和负号输出
 matplotlib.rcParams['font.family'] = 'SimHei'
@@ -16,7 +16,7 @@ matplotlib.rcParams['axes.unicode_minus'] = False
 class Scatter:
 
     # 构造方法
-    # 参数1：elem_config - 元素配置字典
+    # 参数1：elem_config - 元素配置
     @typechecked
     def __init__(
         self,
@@ -24,7 +24,7 @@ class Scatter:
     ):
         
         # 保存参数
-        self.params: DF = elem_config['params']
+        self.params: DF = elem_config.params
 
         # 检查参数
         try:

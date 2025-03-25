@@ -7,6 +7,7 @@ from typeguard import typechecked
 
 # 导入自定义库模块
 from .datacell import DataCell
+from .datacell import DataConfig
 from ..mlp_exceptions import ConstructionError
 
 
@@ -15,12 +16,12 @@ class DataPool:
 
     # 构造方法
     # 参数1：pool_path - 数据池文件路径
-    # 参数2：pool_config - 数据池配置字典
+    # 参数2：pool_config - 数据池配置
     @typechecked
     def __init__(
         self, 
         pool_path: str,
-        pool_config: dict|None = None
+        pool_config: dict[str, DataConfig] | None = None
     ):
         
         # 保存数据池文件路径
@@ -41,10 +42,10 @@ class DataPool:
         # 初始化数据块字典
         try:
 
-            # 如果配置字典不为空
+            # 如果配置不为空
             if pool_config is not None:
 
-                # 遍历配置字典
+                # 遍历配置
                 for cell_id in pool_config:
 
                     # 添加数据块
@@ -69,9 +70,9 @@ class DataPool:
         return deepcopy(self.__cell_dict)
 
     # 添加数据块方法
-    # 参数1：data_config - 数据块配置字典
+    # 参数1：data_config - 数据块配置
     @typechecked
-    def add_cell(self, data_config: dict):
+    def add_cell(self, data_config: DataConfig):
         
         # 构造数据块
         cell = DataCell(
@@ -90,14 +91,14 @@ class DataPool:
         # 返回数据块
         return self.__cell_dict[cell_id]
     
-    # 获取数据池配置字典方法
+    # 获取数据池配置方法
     def get_config(self) -> dict:
 
-        # 构造数据池配置字典
+        # 构造数据池配置
         pool_config = {
             cell_id: cell.get_config() \
             for cell_id, cell in self.__cell_dict.items()
         }
 
-        # 返回数据池配置字典
+        # 返回数据池配置
         return pool_config

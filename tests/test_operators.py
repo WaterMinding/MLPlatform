@@ -24,6 +24,7 @@ sys.path.append(ROOT)
 from app import Variable
 from app import op_entry
 from app import OperatorNotFoundError
+from app.protocols import OpConfig
 
 
 # 测试算子层
@@ -95,16 +96,28 @@ class Test_op_entry(unittest.TestCase):
 
         # 测试typechecked装饰器
         with self.assertRaises(TypeCheckError):
-            op_entry(123, 456, 789),
+            op_entry(123),
         
         # 测试OperatorNotFoundError
         with self.assertRaises(OperatorNotFoundError):
-            op_entry('wuliwalajiliguala', None, None),
+            op_entry(
+                OpConfig(
+                    op_name = 'wuliwalajiliguala',
+                    parameters = None, 
+                    variables = None
+                )
+            ),
 
         # 测试算子类不符合协议引发的TypeError
         with self.assertRaises(TypeError):
 
-            op_entry('TestOp', None, None)
+            op_entry(
+                OpConfig(
+                    op_name = 'TestOp', 
+                    parameters =  None, 
+                    variables = None
+                )
+            )
         
     # 测试线性回归算子
     def test_linear_regression(self):
@@ -123,9 +136,11 @@ class Test_op_entry(unittest.TestCase):
 
         # 测试线性回归算子
         results= op_entry(
-            op_name = 'LinearRegression', 
-            parameters = None, 
-            variables = var_dict
+            OpConfig(
+                op_name = 'LinearRegression', 
+                parameters = None, 
+                variables = var_dict
+            )
         )
 
         # 构造正确图像数据
@@ -135,50 +150,50 @@ class Test_op_entry(unittest.TestCase):
         })
 
         # 获取文本结果
-        text = results['text_list']
+        text = results.text_list
 
         # 获取图像结果
-        chart = results['chart_list']
+        chart = results.chart_list
 
         # 获取数据结果
-        data = results['data_list']
+        data = results.data_list
 
         # 检查输出的文本结果是否正确
         self.assertEqual(
-            text[0]['cell_num'],
+            text[0].cell_num,
             1
         )
 
         self.assertIsInstance(
-            text[0]['text'],
+            text[0].text,
             str
         )
 
         # 检查输出的图像结果是否正确
         self.assertEqual(
-            chart[0]['cell_num'],
+            chart[0].cell_num,
             2
         )
 
         self.assertEqual(
-            chart[0]['elem_list'][0]['elem_type'],
+            chart[0].elem_list[0].elem_type,
             'Line'            
         )
 
         self.assertTrue(
             correct_chart.equals(
-                chart[0]['elem_list'][0]['params']
+                chart[0].elem_list[0].params
             )
         )
 
         self.assertEqual(
-            chart[0]['elem_list'][1]['elem_type'],
+            chart[0].elem_list[1].elem_type,
             'Scatter'
         )
 
         self.assertTrue(
             correct_chart.equals(
-                chart[0]['elem_list'][1]['params']
+                chart[0].elem_list[1].params
             )
         )
 

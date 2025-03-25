@@ -8,13 +8,12 @@ from typeguard import typechecked
 # 导入自定义模块
 from .initial import initialize
 from .initial import POOL_META
-from .initial import META_ID
 from .fifolock import pool_lock
-from .protocols import DocuConfig
+from ..protocols import DocuConfig
 
 
 # 打开文档函数
-# 参数1：docu_config - 文档配置字典
+# 参数1：docu_config - 文档配置
 async def open_docu(docu_config: DocuConfig):
 
     # 调用初始化函数
@@ -26,8 +25,8 @@ async def open_docu(docu_config: DocuConfig):
     # 初始化数据缺失列表
     missing_data = []
 
-    # 将文档配置字典中的数据传入运行时数据池
-    data_list = docu_config['data_list']
+    # 将文档配置中的数据传入运行时数据池
+    data_list = docu_config.data_list
 
     # 获取数据池元数据表
     async with pool_lock:
@@ -43,14 +42,14 @@ async def open_docu(docu_config: DocuConfig):
     # 初始化运行时数据池
     for data_config in data_list:
 
-        if data_config['cell_id'] in meta_dict:
+        if data_config.cell_id in meta_dict:
 
             datapool.add_cell(data_config)
         
         else:
 
             missing_data.append(
-                data_config['cell_id']
+                data_config.cell_id
             )
     
     return datapool, missing_data

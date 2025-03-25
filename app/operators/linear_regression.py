@@ -1,8 +1,6 @@
 # 导入标准库模块
 from copy import deepcopy
-from typing import Protocol
 from typing import TypedDict
-from typing import runtime_checkable
 
 # 导入第三方库模块
 import pandas as pd
@@ -12,6 +10,10 @@ from sklearn.linear_model import LinearRegression
 
 # 导入自定义模块
 from ..data import Variable
+from ..protocols import ElemConfig
+from ..protocols import ChartConfig
+from ..protocols import TextConfig
+from ..protocols import OpResult
 
 
 # 定义变量区字典协议
@@ -65,10 +67,10 @@ class LR:
         formula = f'$$y = {coefficients[0][0]}x + {intercept[0]}$$'
 
         # 构造文本配置
-        text_config = {
-            'cell_num': 1,
-            'text': formula
-        }
+        text_config = TextConfig(
+            cell_num = 1,
+            text = formula
+        )
 
         # 构造元素数据
         elem_data = pd.concat(
@@ -77,32 +79,32 @@ class LR:
         )
 
         # 构造线配置
-        line_config = {
-            'elem_type': 'Line',
-            'params': elem_data
-        }
+        line_config = ElemConfig(
+            elem_type = 'Line',
+            params = elem_data
+        )
 
         # 构造散点配置
-        scatter_config = {
-            'elem_type': 'Scatter',
-            'params': deepcopy(elem_data)
-        }
+        scatter_config = ElemConfig(
+            elem_type = 'Scatter',
+            params = deepcopy(elem_data)
+        )
 
         # 构造图表配置
-        chart_config = {
-            'cell_num': 2,
-            'elem_list': [
+        chart_config = ChartConfig(
+            cell_num = 2,
+            elem_list = [
                 line_config, 
                 scatter_config
             ]
-        }
+        )
 
         # 构造结果
-        result = {
-            'text_list': [text_config],
-            'chart_list': [chart_config],
-            'data_list': None
-        }
+        result = OpResult(
+            text_list = [text_config],
+            chart_list = [chart_config],
+            data_list = None
+        )
 
         return result
 

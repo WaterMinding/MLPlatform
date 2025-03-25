@@ -24,7 +24,7 @@ POOL_META = "META_TABLE"
 META_ID = "META_ID"
 
 # 检查VC++依赖函数
-def check_vc_redist(version):
+def check_vc_redist(version:float | str):
     
     try:
 

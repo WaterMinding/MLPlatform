@@ -24,6 +24,7 @@ sys.path.append(ROOT)
 from app import DataCell, Variable
 from app import ConstructionError
 from app import VariableNotFoundError
+from app.protocols import DataConfig
 
 # 测试变量类
 class TestVariable(unittest.TestCase):
@@ -103,13 +104,13 @@ class TestDataCell(unittest.TestCase):
             
             pool_path = f'{TESTS}/duck.db',
 
-            data_config = {
-                "cell_id": "data_12138",
-
-                "var_str_list": [
+            data_config = DataConfig(
+                cell_id = "data_12138",
+                cell_name = "data_12138",
+                var_str_list = [
                     "var1:quan:data_12138"
                 ]
-            }
+            )
         )
     
     # 测试类清理方法
@@ -134,6 +135,7 @@ class TestDataCell(unittest.TestCase):
             \n测试数据块类：获取数据块ID方法\
             \n测试数据块类：获取变量字符串列表方法\
             \n测试数据块类：获取数据池文件路径方法\
+            \n测试数据块类：获取数据块名称方法\
             "
         )
 
@@ -145,19 +147,12 @@ class TestDataCell(unittest.TestCase):
                 "var1:quan:data_12138",
             )
         
-        # 构造错误数据配置字典
-        wrong_data_config = {
-            "data_id": "data_12138",
-            "var_list": []
-        }
-
-        # 测试传入错误数据配置字典
-        with self.assertRaises(ConstructionError):
-
-            self.data_cell = DataCell(
-                f'{TESTS}/duck.db',
-                wrong_data_config
-            )
+        # 构造错误数据配置
+        wrong_data_config = DataConfig(
+            cell_id = "data_12138",
+            cell_name = "data_12138",
+            var_str_list = []
+        )
         
         # 构造错误数据池文件路径
         wrong_data_pool_file = f'{TESTS}/duckie.db'
@@ -170,13 +165,14 @@ class TestDataCell(unittest.TestCase):
                 wrong_data_config
             )
 
-        # 构造正确数据配置字典
-        data_config = {
-            "cell_id": "data_12138",
-            "var_str_list": [
+        # 构造正确数据配置
+        data_config = DataConfig(
+            cell_id = "data_12138",
+            cell_name = "data_12138",
+            var_str_list = [
                 "var1:quan:data_12138"
             ]
-        }
+        )
 
         # 正确构造数据块对象
         self.data_cell = DataCell(
@@ -194,6 +190,12 @@ class TestDataCell(unittest.TestCase):
         # 测试数据块ID
         self.assertEqual(
             self.data_cell.cell_id,
+            "data_12138"
+        )
+
+        # 测试数据块名称
+        self.assertEqual(
+            self.data_cell.cell_name,
             "data_12138"
         )
 
@@ -418,17 +420,17 @@ class TestDataCell(unittest.TestCase):
             )
         )
 
-    # 测试获取数据配置字典方法
+    # 测试获取数据配置方法
     def test_get_config(self):
         
-        # 检查数据配置字典
+        # 检查数据配置
         self.assertEqual(
             self.data_cell.get_config(),
-            {
-                "cell_id": "data_12138",
-                
-                "var_str_list": [
+            DataConfig(
+                cell_id = "data_12138",
+                cell_name = "data_12138",
+                var_str_list = [
                     "var1:quan:data_12138",
                 ]                
-            }
+            )
         )
