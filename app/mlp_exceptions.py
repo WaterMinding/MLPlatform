@@ -63,11 +63,11 @@ class DependencyError(Exception):
         )
 
 
-# 初始化未完成异常
-class InitializationError(Exception):
+# 无文档异常
+class DocuNotFoundError(Exception):
 
     def __init__(self):
         super().__init__(
-            f"未完成初始化。\n" + \
-            f"Initialization not completed."
+            f"当前无文档。\n" + \
+            f"Docu not Found."
         )
