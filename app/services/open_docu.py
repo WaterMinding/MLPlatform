@@ -6,7 +6,7 @@ from duckdb import connect
 from typeguard import typechecked
 
 # 导入自定义模块
-from .initial import initialize
+from ..data import DataPool
 from .initial import POOL_META
 from .fifolock import pool_lock
 from ..protocols import DocuConfig
@@ -14,13 +14,13 @@ from ..protocols import DocuConfig
 
 # 打开文档函数
 # 参数1：docu_config - 文档配置
-async def open_docu(docu_config: DocuConfig):
+async def open_docu(
+    docu_config: DocuConfig,
+    pool_path: str
+):
 
-    # 调用初始化函数
-    datapool = await initialize()
-
-    # 保存数据池文件路径
-    pool_path = datapool.pool_path
+    # 构造运行时数据池
+    datapool = DataPool(pool_path)
 
     # 初始化数据缺失列表
     missing_data = []

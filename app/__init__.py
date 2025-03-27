@@ -4,6 +4,7 @@ from .data import Variable
 from .data import DataCell
 from .data import DataPool
 from .operators import op_entry
+from .services import initialize
 from .plotters import plotter_entry
 from .mlp_exceptions import VariableNotFoundError
 from .mlp_exceptions import ConstructionError

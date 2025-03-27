@@ -7,11 +7,10 @@ import tomllib as toml
 import duckdb
 
 # 导入自定义模块
-from ..data import DataPool
 from .fifolock import pool_lock
 from ..mlp_exceptions import DependencyError
 
-APP_PATH = os.path.dirname(
+APP_ROOT = os.path.dirname(
     os.path.dirname(
         os.path.abspath(__file__)
     )
@@ -20,8 +19,8 @@ APP_PATH = os.path.dirname(
 # 数据池元信息表名称
 POOL_META = "META_TABLE"
 
-# 数据池元信息表ID列
-META_ID = "META_ID"
+# 数据池文件路径
+POOL_PATH = None
 
 # 检查VC++依赖函数
 def check_vc_redist(version:float | str):
@@ -74,16 +73,25 @@ async def initialize():
 
     # 读取数据池文件路径
     with open(
-        f"{APP_PATH}/config.toml", "rb"
+        f"{APP_ROOT}/config.toml", "rb"
     ) as file:
 
         config = toml.load(file)
     
     pool_path = config['data_pool_path']
 
+    POOL_PATH = pool_path
+
     # 如果数据池文件不存在，则创建之
     if not os.path.exists(pool_path):
 
+        if not os.path.exists(
+            os.path.dirname(pool_path)
+        ):
+            os.makedirs(
+                os.path.dirname(pool_path)
+            )
+        
         with duckdb.connect(pool_path) as conn:
 
             pass # pragma: no cover
@@ -95,11 +103,10 @@ async def initialize():
 
             conn.sql(
                 f"CREATE TABLE IF NOT EXISTS {POOL_META} " +
-                f"({META_ID} INT)"
+                f"(cell_id VARCHAR PRIMARY KEY," + 
+                f"cell_name VARCHAR," +
+                f"variables VARCHAR" + ");"
             )
     
-    # 构造运行时数据池
-    data_pool = DataPool(pool_path)
-
-    return data_pool
+    return pool_path
 
