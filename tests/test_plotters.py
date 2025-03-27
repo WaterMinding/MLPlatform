@@ -27,6 +27,7 @@ sys.path.append(ROOT)
 # 导入自定义模块
 from app import plotter_entry
 from app import PlotterNotFoundError
+from app.protocols import CellType
 from app.protocols import ChartConfig
 from app.protocols import ElemConfig 
 
@@ -109,6 +110,7 @@ class Test_plotter_entry(unittest.TestCase):
         ):
             plotter_entry(
                 ChartConfig(
+                    cell_type = CellType.CHART,
                     cell_num = 1,
                     elem_list = [
                         ElemConfig(
@@ -125,6 +127,7 @@ class Test_plotter_entry(unittest.TestCase):
         with self.assertRaises(TypeError):
             plotter_entry(
                 ChartConfig(
+                    cell_type = CellType.CHART,
                     cell_num = 1,
                     elem_list = [
                         ElemConfig(
@@ -145,6 +148,7 @@ class Test_plotter_entry(unittest.TestCase):
 
         # 构造图像配置
         config = ChartConfig(
+            cell_type = CellType.CHART,
             cell_num = 1,
             elem_list = [
                 ElemConfig(
@@ -187,6 +191,7 @@ class Test_plotter_entry(unittest.TestCase):
 
         # 构造图像配置
         config = ChartConfig(
+            cell_type = CellType.CHART,
             cell_num = 1,
             elem_list = [
                 ElemConfig(
@@ -228,6 +233,7 @@ class Test_plotter_entry(unittest.TestCase):
 
         # 构造图像配置
         config = ChartConfig(
+            cell_type = CellType.CHART,
             cell_num = 1,
             elem_list = [
                 ElemConfig(

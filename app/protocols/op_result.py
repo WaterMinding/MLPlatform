@@ -3,8 +3,8 @@ from pydantic import BaseModel
 
 # 导入自定义模块
 from ..data import Variable
-from .typed_dicts import TextConfig
-from .typed_dicts import ChartConfig
+from .cells_config import TextConfig
+from .cells_config import ChartConfig
 
 
 # 定义算子层结果配置

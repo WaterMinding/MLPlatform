@@ -10,6 +10,7 @@ from sklearn.linear_model import LinearRegression
 
 # 导入自定义模块
 from ..data import Variable
+from ..protocols import CellType
 from ..protocols import ElemConfig
 from ..protocols import ChartConfig
 from ..protocols import TextConfig
@@ -68,6 +69,7 @@ class LR:
 
         # 构造文本配置
         text_config = TextConfig(
+            cell_type = CellType.TEXT,
             cell_num = 1,
             text = formula
         )
@@ -92,6 +94,7 @@ class LR:
 
         # 构造图表配置
         chart_config = ChartConfig(
+            cell_type = CellType.CHART,
             cell_num = 2,
             elem_list = [
                 line_config, 

@@ -6,7 +6,7 @@ from typing import runtime_checkable
 from matplotlib.axes import Axes
 
 # 导入自定义模块
-from .typed_dicts import ElemConfig
+from .cells_config import ElemConfig
 
 
 # 定义绘图类协议

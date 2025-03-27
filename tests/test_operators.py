@@ -24,6 +24,7 @@ sys.path.append(ROOT)
 from app import Variable
 from app import op_entry
 from app import OperatorNotFoundError
+from app .protocols import CellType
 from app.protocols import OpConfig
 
 
@@ -102,6 +103,7 @@ class Test_op_entry(unittest.TestCase):
         with self.assertRaises(OperatorNotFoundError):
             op_entry(
                 OpConfig(
+                    cell_type = CellType.OP,
                     op_name = 'wuliwalajiliguala',
                     parameters = None, 
                     variables = None
@@ -113,6 +115,7 @@ class Test_op_entry(unittest.TestCase):
 
             op_entry(
                 OpConfig(
+                    cell_type = CellType.OP,
                     op_name = 'TestOp', 
                     parameters =  None, 
                     variables = None
@@ -137,6 +140,7 @@ class Test_op_entry(unittest.TestCase):
         # 测试线性回归算子
         results= op_entry(
             OpConfig(
+                cell_type = CellType.OP,
                 op_name = 'LinearRegression', 
                 parameters = None, 
                 variables = var_dict

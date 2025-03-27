@@ -2,8 +2,10 @@ from .plotter import Plotter
 from ..data import DataConfig
 from .op_result import OpResult
 from .operator import Operator
-from .typed_dicts import OpConfig
+from .cells_config import OpConfig
 from .docu_config import DocuConfig
-from .typed_dicts import TextConfig
-from .typed_dicts import ElemConfig
-from .typed_dicts import ChartConfig
+from .cells_config import CellType
+from .cells_config import ImageConfig
+from .cells_config import TextConfig
+from .cells_config import ElemConfig
+from .cells_config import ChartConfig

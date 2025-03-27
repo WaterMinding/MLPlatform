@@ -5,10 +5,10 @@ from typing import Union
 from pydantic import BaseModel
 
 # 导入自定义模块
-from .typed_dicts import DataConfig
-from .typed_dicts import TextConfig
-from .typed_dicts import ChartConfig
-from .typed_dicts import OpConfig
+from .cells_config import DataConfig
+from .cells_config import TextConfig
+from .cells_config import ImageConfig
+from .cells_config import OpConfig
 
 
 # 文档配置模型
@@ -19,7 +19,7 @@ class DocuConfig(BaseModel):
     edit_list: list[
         Union[
             TextConfig, 
-            ChartConfig, 
+            ImageConfig, 
             OpConfig
         ]
     ]
