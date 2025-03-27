@@ -28,6 +28,9 @@ DATA_POOL = None
 # 数据池文件路径
 POOL_PATH = None
 
+# 数据池元信息表名称
+POOL_META = "META_TABLE"
+
 # app包根路径
 APP_ROOT = os.path.dirname(
     os.path.abspath(__file__)
@@ -58,7 +61,9 @@ async def root():
     # 调用初始化服务
     try:
         
-        POOL_PATH = await initialize()
+        POOL_PATH = await initialize(
+            POOL_META
+        )
     
     except Exception as e:
 
@@ -79,7 +84,10 @@ async def new_docu_api(docu_id: str):
     # 构造运行时数据池
     try:
         
-        DATA_POOL = DataPool(POOL_PATH)
+        DATA_POOL = DataPool(
+            POOL_PATH,
+            POOL_META,
+        )
     
     except Exception as e:
         
@@ -111,6 +119,7 @@ async def open_docu_api(
 
         DATA_POOL,missing = await open_docu(
             docu_config = docu_config,
+            pool_meta = POOL_META,
             pool_path = POOL_PATH,
         )
 
@@ -183,6 +192,7 @@ async def upload_file_api(
         new_meta = await upload_data(
             file = file,
             pool_path = POOL_PATH,
+            pool_meta = POOL_META,
         )
 
     except Exception as e:
@@ -212,6 +222,7 @@ async def get_pool_meta_api(
         
         pool_meta = await get_pool_meta(
             pool_path = POOL_PATH,
+            pool_meta = POOL_META,
         )
     
     except Exception as e:
@@ -243,6 +254,7 @@ async def delete_pool_file_api(
         
         cell_meta = await delete_data(
             pool_path = POOL_PATH,
+            pool_meta = POOL_META,
             cell_id = cell_id,
         )
 

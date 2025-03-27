@@ -87,6 +87,9 @@ class TestDataCell(unittest.TestCase):
 
     # 测试类初始化方法
     def setUp(self):
+
+        # 构造元信息表名
+        self.meta_name = "META_TABLE"
         
         # 创建测试用数据库表
         df = DF({"var1": [1, 2, 3]})
@@ -98,12 +101,23 @@ class TestDataCell(unittest.TestCase):
                 "CREATE TABLE data_12138 \
                 AS SELECT * FROM df"
             )
+
+            conn.sql(
+                f"CREATE TABLE {self.meta_name} " + 
+                f"(cell_id VARCHAR, cell_name VARCHAR, " + 
+                F"variables TEXT)"
+            )
+
+            conn.sql(
+                f"INSERT INTO {self.meta_name} VALUES " +
+                f"('data_12138', 'data_12138', 'var1:quan:data_12138')"
+            )
         
         # 构造数据块对象
         self.data_cell = DataCell(
             
             pool_path = f'{TESTS}/duck.db',
-
+            meta_name = self.meta_name,
             data_config = DataConfig(
                 cell_id = "data_12138",
                 cell_name = "data_12138",
@@ -120,6 +134,7 @@ class TestDataCell(unittest.TestCase):
         with duckdb.connect(f"{TESTS}/duck.db") as conn:
 
             conn.sql("DROP TABLE data_12138")
+            conn.sql(f"DROP TABLE {self.meta_name}")
 
         # 删除测试用数据库文件
         os.remove(f"{TESTS}/duck.db")
@@ -144,6 +159,7 @@ class TestDataCell(unittest.TestCase):
             
             self.data_cell = DataCell(
                 "data_12138",
+                self.meta_name,
                 "var1:quan:data_12138",
             )
         
@@ -162,6 +178,7 @@ class TestDataCell(unittest.TestCase):
 
             self.data_cell = DataCell(
                 wrong_data_pool_file,
+                self.meta_name,
                 wrong_data_config
             )
 
@@ -177,6 +194,7 @@ class TestDataCell(unittest.TestCase):
         # 正确构造数据块对象
         self.data_cell = DataCell(
             f'{TESTS}/duck.db',
+            self.meta_name,
             data_config
         )
 
@@ -384,6 +402,24 @@ class TestDataCell(unittest.TestCase):
             ).register.equals(
                 DF({'var3(4)': ['a','b','c']})
             )
+        )
+
+        # 读取数据池文件元信息
+        with duckdb.connect(f"{TESTS}/duck.db") as conn:
+            
+            meta = conn.sql(
+                f"SELECT * FROM {self.meta_name} " +
+                f"WHERE cell_id = '{self.data_cell.cell_id}'"
+            ).df().values[0].tolist()
+        
+        # 检查元信息
+        self.assertEqual(
+            meta,
+            [
+                self.data_cell.cell_id,
+                self.data_cell.cell_id,
+                ';'.join(self.data_cell.var_str_list),
+            ]
         )
     
     # 测试替换变量方法

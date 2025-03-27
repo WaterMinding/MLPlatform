@@ -4,13 +4,13 @@
 from duckdb import connect
 
 # 导入自定义模块
-from .initial import POOL_META
 from .fifolock import pool_lock
 from ..mlp_exceptions import DataNotFoundError
 
 # 删除数据池中数据函数
 async def delete_data(
-    pool_path: str, 
+    pool_path: str,
+    pool_meta: str,
     cell_id: str
 ):
     
@@ -20,7 +20,7 @@ async def delete_data(
         with connect(pool_path) as conn:
 
             cell_meta = conn.sql(
-                f"SELECT * FROM {POOL_META} " + 
+                f"SELECT * FROM {pool_meta} " + 
                 f"WHERE cell_id = '{cell_id}'"
             ).df()
 
@@ -36,7 +36,7 @@ async def delete_data(
         with connect(pool_path) as conn:
 
             conn.sql(
-                f"DELETE FROM {POOL_META} " +
+                f"DELETE FROM {pool_meta} " +
                 f"WHERE cell_id = '{cell_id}'"
             )
 

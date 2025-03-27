@@ -7,7 +7,6 @@ from pandas import DataFrame as DF
 
 # 导入自定义模块
 from ..data import DataPool
-from .initial import POOL_META
 from .fifolock import pool_lock
 from ..protocols import DataConfig
 from ..mlp_exceptions import DataNotFoundError
@@ -32,7 +31,7 @@ async def import_data(
         with connect(data_pool.pool_path) as conn:
 
             meta = conn.sql(
-                f"SELECT * FROM {POOL_META} " + 
+                f"SELECT * FROM {data_pool.meta_name} " + 
                 f"WHERE cell_id = '{cell_id}'"
             ).df()
     

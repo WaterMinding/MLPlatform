@@ -16,11 +16,6 @@ APP_ROOT = os.path.dirname(
     )
 )
 
-# 数据池元信息表名称
-POOL_META = "META_TABLE"
-
-# 数据池文件路径
-POOL_PATH = None
 
 # 检查VC++依赖函数
 def check_vc_redist(version:float | str):
@@ -63,7 +58,7 @@ def check_vc_redist(version:float | str):
 # 该函数负责：
     # 检查系统依赖
     # 初始化数据池
-async def initialize():
+async def initialize(pool_meta: str):
 
     # 检查Visual C++ Redistributable是否安装
     if not check_vc_redist("14.0"):
@@ -79,8 +74,6 @@ async def initialize():
         config = toml.load(file)
     
     pool_path = config['data_pool_path']
-
-    POOL_PATH = pool_path
 
     # 如果数据池文件不存在，则创建之
     if not os.path.exists(pool_path):
@@ -102,7 +95,7 @@ async def initialize():
         with duckdb.connect(pool_path) as conn:
 
             conn.sql(
-                f"CREATE TABLE IF NOT EXISTS {POOL_META} " +
+                f"CREATE TABLE IF NOT EXISTS {pool_meta} " +
                 f"(cell_id VARCHAR PRIMARY KEY," + 
                 f"cell_name VARCHAR," +
                 f"variables VARCHAR" + ");"

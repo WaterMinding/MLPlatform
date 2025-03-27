@@ -10,7 +10,6 @@ import pandas as pd
 from duckdb import connect
 
 # 导入自定义模块
-from .initial import POOL_META
 from .fifolock import pool_lock
 
 
@@ -143,6 +142,7 @@ async def read_excel(file):
 async def upload_data(
     file,
     pool_path,
+    pool_meta,
 ):
     
     print('数据上传启动...')
@@ -233,7 +233,7 @@ async def upload_data(
             )
 
             conn.sql(
-                f"INSERT INTO {POOL_META} " +
+                f"INSERT INTO {pool_meta} " +
                 f"(cell_id, cell_name, variables) " +
                 f"VALUES ('{cell_id}','{file_name}'," +
                 f"'{long_var_str}')"
@@ -241,8 +241,8 @@ async def upload_data(
 
             # 获取新数据块的元数据
             new_meta = conn.sql(
-                f"SELECT * FROM {POOL_META}" #+ 
-                #f" WHERE cell_id = '{cell_id}'"
+                f"SELECT * FROM {pool_meta} " + 
+                f"WHERE cell_id = '{cell_id}'"
             ).df()
     
     end = time.time()

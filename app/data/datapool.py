@@ -21,11 +21,15 @@ class DataPool:
     def __init__(
         self, 
         pool_path: str,
+        meta_name: str,
         pool_config: dict[str, DataConfig] | None = None
     ):
         
         # 保存数据池文件路径
         self.__pool_path = pool_path
+
+        # 保存数据池文件元信息表名
+        self.__meta_name = meta_name
 
         # 检查数据池文件路径是否合法
         flag = os.path.isfile(self.pool_path)
@@ -62,7 +66,13 @@ class DataPool:
     def pool_path(self):
 
         return self.__pool_path
-    
+
+    # 获取数据池文件元信息表名
+    @property
+    def meta_name(self):
+
+        return self.__meta_name
+
     # 获取数据块字典
     @property
     def cell_dict(self):
@@ -77,6 +87,7 @@ class DataPool:
         # 构造数据块
         cell = DataCell(
             pool_path = self.__pool_path,
+            meta_name = self.__meta_name,
             data_config = data_config
         )
 

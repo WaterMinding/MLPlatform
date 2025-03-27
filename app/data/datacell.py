@@ -79,6 +79,7 @@ class DataCell:
     def __init__(
         self,
         pool_path: str,
+        meta_name: str,
         data_config: DataConfig
     ):
         
@@ -86,6 +87,9 @@ class DataCell:
 
             # 保存数据池文件路径
             self.__pool_path = pool_path
+
+            # 保存元信息表名
+            self.__meta_name = meta_name
 
             # 检查数据池文件是否存在
             if not os.path.exists(pool_path):
@@ -180,7 +184,10 @@ class DataCell:
     # 追加变量方法
     # 参数1：var_list - 变量对象列表
     @typechecked
-    def append_var(self, var_lst: list[Variable]):
+    def append_var(
+        self, 
+        var_lst: list[Variable]
+    ):
         
         # 读取原始表
         with duckdb.connect(self.__pool_path) as conn:
@@ -267,6 +274,18 @@ class DataCell:
                 f'CREATE OR REPLACE TABLE \
                 "{self.cell_id}" AS \
                 SELECT * FROM origin_data'
+            )
+
+        # 构造长变量字符串
+        long_var_str = ';'.join(self.var_str_list)
+
+        # 保存长变量字符串
+        with duckdb.connect(self.__pool_path) as conn:
+
+            conn.sql(
+                f"UPDATE '{self.__meta_name}' " +
+                f"SET variables = '{long_var_str}' " +
+                f"WHERE cell_id = '{self.cell_id}'"
             )
 
     # 替换变量方法

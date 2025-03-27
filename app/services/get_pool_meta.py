@@ -4,12 +4,14 @@
 from duckdb import connect
 
 # 导入自定义模块
-from .initial import POOL_META
 from .fifolock import pool_lock
 
 
 # 获取数据池文件元信息函数
-async def get_pool_meta(pool_path):
+async def get_pool_meta(
+    pool_path: str,
+    pool_meta: str
+):
 
     # 获取元信息表
     async with pool_lock:    
@@ -17,7 +19,7 @@ async def get_pool_meta(pool_path):
         with connect(pool_path) as conn:
 
             meta = conn.sql(
-                f"SELECT * FROM {POOL_META}"
+                f"SELECT * FROM {pool_meta}"
             ).df()
 
     return meta.to_dict(orient='index')

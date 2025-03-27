@@ -57,10 +57,18 @@ class TestDataPool(unittest.TestCase):
         # 定义数据池文件路径
         self.pool_path = f'{TESTS}/duck.db'
 
+        # 定义数据池元信息表名
+        self.meta_name = 'META_TABLE'
+
         # 创建测试用数据池文件
         with connect(f'{TESTS}/duck.db') as conn:
 
-            pass
+            conn.sql(
+                f"CREATE TABLE {self.meta_name} " + 
+                f"(cell_id VARCHAR, cell_name VARCHAR, " + 
+                F"variables TEXT)"
+            )
+        
 
     # 测试类清理方法
     def tearDown(self):
@@ -84,13 +92,13 @@ class TestDataPool(unittest.TestCase):
         with self.assertRaises(TypeCheckError):
 
             # 传入错误类型参数
-            DataPool('dasdas','dasdas')
+            DataPool('dasdas','dasdas','dasdas')
         
         # 测试文件路径检查
         with self.assertRaises(FileNotFoundError):
 
             # 传入错误路径
-            DataPool('dasdas',self.pool_config)
+            DataPool('dasdas',self.meta_name,self.pool_config)
         
         # 构造错误的数据池配置
         error_pool_config = deepcopy(self.pool_config)
@@ -100,10 +108,10 @@ class TestDataPool(unittest.TestCase):
         with self.assertRaises(ConstructionError):
 
             # 传入错误的数据池配置
-            DataPool(self.pool_path,error_pool_config)
+            DataPool(self.pool_path,self.meta_name,error_pool_config)
         
         # 传入正确的数据池配置
-        pool = DataPool(self.pool_path,self.pool_config)
+        pool = DataPool(self.pool_path,self.meta_name,self.pool_config)
 
         # 测试数据池文件路径
         self.assertEqual(pool.pool_path,self.pool_path)
@@ -165,6 +173,7 @@ class TestDataPool(unittest.TestCase):
 
         pool = DataPool(
             self.pool_path,
+            self.meta_name,
             self.pool_config
         )
 
@@ -213,6 +222,7 @@ class TestDataPool(unittest.TestCase):
         # 构造数据池
         pool = DataPool(
             self.pool_path,
+            self.meta_name,
             self.pool_config
         )
 

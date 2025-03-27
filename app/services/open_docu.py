@@ -7,7 +7,6 @@ from typeguard import typechecked
 
 # 导入自定义模块
 from ..data import DataPool
-from .initial import POOL_META
 from .fifolock import pool_lock
 from ..protocols import DocuConfig
 
@@ -16,11 +15,15 @@ from ..protocols import DocuConfig
 # 参数1：docu_config - 文档配置
 async def open_docu(
     docu_config: DocuConfig,
-    pool_path: str
+    pool_path: str,
+    pool_meta: str
 ):
 
     # 构造运行时数据池
-    datapool = DataPool(pool_path)
+    datapool = DataPool(
+        pool_path,
+        pool_meta
+    )
 
     # 初始化数据缺失列表
     missing_data = []
@@ -34,7 +37,7 @@ async def open_docu(
         with connect(pool_path) as conn:
 
             meta_table = conn.table(
-                POOL_META
+                pool_meta
             ).df()
 
             meta_dict = meta_table.to_dict()
