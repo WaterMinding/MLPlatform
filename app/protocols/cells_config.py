@@ -62,7 +62,7 @@ class OpConfig(BaseModel):
     cell_type: CellType
     op_name: str
     parameters: dict | None
-    variables: dict[str, list[Variable]] | None
+    variables: dict[str, list[Variable|str]] | None
 
     class Config:
 
