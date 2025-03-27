@@ -135,7 +135,7 @@ class Test_op_entry(unittest.TestCase):
         var_2.register = DF({'var2': [1, 2, 3, 4, 5]})
 
         # 构造测试变量字典
-        var_dict = {'X': var_1, 'Y': var_2}
+        var_dict = {'X': [var_1], 'Y': [var_2]}
 
         # 测试线性回归算子
         results= op_entry(

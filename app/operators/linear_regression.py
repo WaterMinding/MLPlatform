@@ -20,8 +20,8 @@ from ..protocols import OpResult
 # 定义变量区字典协议
 class VariableDict(TypedDict):
 
-    X: Variable
-    Y: Variable
+    X: list[Variable]
+    Y: list[Variable]
 
 
 # 线性回归类
@@ -41,8 +41,8 @@ class LR:
     ):
         
         # 获取输入变量
-        X = variables['X']
-        Y = variables['Y']
+        X = variables['X'][0]
+        Y = variables['Y'][0]
 
         # 获取输入数据
         self.X_data = X.register
