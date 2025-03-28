@@ -12,7 +12,9 @@ from matplotlib.figure import Figure
 
 # 导入自定义模块
 from ..protocols import Plotter
+from ..protocols import CellType
 from ..protocols import ChartConfig
+from ..protocols import ImageConfig
 from ..mlp_exceptions import PlotterNotFoundError
 
 
@@ -104,5 +106,8 @@ def plotter_entry(chart_config: ChartConfig):
     ).decode('utf-8')
 
     # 返回结果
-    return result
+    return ImageConfig(
+        cell_type =CellType.IMAGE, 
+        image = result
+    )
         

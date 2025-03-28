@@ -175,7 +175,7 @@ class Test_plotter_entry(unittest.TestCase):
         result = plotter_entry(config)
 
         # 展示绘图结果
-        image_data = base64.b64decode(result)
+        image_data = base64.b64decode(result.image)
         with Image.open(BytesIO(image_data)) as img:
             plt.imshow(img)
             plt.axis('off')
@@ -218,7 +218,7 @@ class Test_plotter_entry(unittest.TestCase):
         result = plotter_entry(config)
 
         # 展示绘图结果
-        image_data = base64.b64decode(result)
+        image_data = base64.b64decode(result.image)
         with Image.open(BytesIO(image_data)) as img:
             plt.imshow(img)
             plt.axis('off')
@@ -257,7 +257,7 @@ class Test_plotter_entry(unittest.TestCase):
         result = plotter_entry(config)
 
         # 展示绘图结果
-        image_data = base64.b64decode(result)
+        image_data = base64.b64decode(result.image)
         with Image.open(BytesIO(image_data)) as img:
             plt.imshow(img)
             plt.axis('off')

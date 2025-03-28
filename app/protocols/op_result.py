@@ -4,6 +4,7 @@ from pydantic import BaseModel
 # 导入自定义模块
 from ..data import Variable
 from .cells_config import TextConfig
+from .cells_config import ImageConfig
 from .cells_config import ChartConfig
 
 
@@ -11,7 +12,7 @@ from .cells_config import ChartConfig
 class OpResult(BaseModel):
 
     text_list: list[TextConfig] | None
-    chart_list: list[ChartConfig] | None
+    chart_list: list[ChartConfig | ImageConfig] | None
     data_list: list[Variable] | None
 
     class Config:
