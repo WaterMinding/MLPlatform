@@ -71,3 +71,23 @@ class DocuNotFoundError(Exception):
             f"当前无文档。\n" + \
             f"Docu not Found."
         )
+
+
+# 算子执行失败异常
+class OperatorRunError(Exception):
+
+    def __init__(self, object_name):
+        super().__init__(
+            f"算子 '{object_name}' 执行失败。\n" + \
+            f"Failed to run operator '{object_name}'."
+        )
+
+
+# 用途不存在异常
+class VarUsageNotFoundError(Exception):
+
+    def __init__(self, usage_name):
+        super().__init__(
+            f"变量用途 '{usage_name}' 不存在。\n" + \
+            f"VarUsage '{usage_name}' not found."
+        )
