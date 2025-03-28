@@ -48,6 +48,9 @@ class LR:
         self.X_data = X.register
         self.Y_data = Y.register
 
+        # 检查数据与参数
+        self.check()
+
         # 构造模型
         self.model = LinearRegression()
 
@@ -111,3 +114,25 @@ class LR:
 
         return result
 
+    # 检查方法
+    def check(self, *args, **kwargs):
+
+        # 检查X是否存在数据缺失值
+        if self.X_data.isna().any().any():
+            
+           raise ValueError(
+               '\n 线性回归要求没有缺失值的数据。' +
+               '而 X 数据存在缺失值。'
+               '\n Linear Regression requires no missing data.' + 
+               'But X data has missing values.'
+            )
+
+        # 检查Y是否存在数据缺失值
+        if self.Y_data.isna().any().any():
+
+           raise ValueError(
+                '\n 线性回归要求没有缺失值的数据。' +
+                '而 Y 数据存在缺失值。' +
+                '\n Linear Regression requires no missing data.' + 
+                'But Y data has missing values.'
+            )

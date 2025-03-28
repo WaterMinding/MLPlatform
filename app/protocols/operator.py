@@ -17,6 +17,10 @@ class Operator(Protocol):
     ):
         ... # pragma: no cover
 
-    def run(*args,**kwargs) -> OpResult:
+    def run(*args, **kwargs) -> OpResult:
+
+        ... # pragma: no cover
+
+    def check(*args, **kwargs):
 
         ... # pragma: no cover
