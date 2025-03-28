@@ -10,13 +10,15 @@ from fastapi import UploadFile
 
 # 导入自定义模块
 from .data import DataPool
+from .services import run_op
 from .services import initialize
 from .services import open_docu
 from .services import import_data
 from .services import upload_data
 from .services import get_pool_meta
-from .protocols import DocuConfig
 from .services import delete_data
+from .protocols import DocuConfig
+from .protocols import OpConfigFront
 
 
 # 创建FastAPI实例
@@ -275,4 +277,31 @@ async def delete_pool_file_api(
 
 # 算子执行接口
     # 查询参数：docu_id - 文档临时ID
-# TODO: 单算子执行
+    # 请求体：op_config - 算子配置
+@app.post("/op")
+async def run_op_api(
+    docu_id: str,
+    op_config: OpConfigFront,
+):
+
+    # 调用算子执行服务
+    try:
+
+        op_result = await run_op(
+            op_config = op_config,
+            data_pool = DATA_POOL,
+        )
+
+    except Exception as e:
+
+        return {
+            "docu_id": docu_id,
+            "status": "error",
+            "message": str(e),
+        }
+        
+    return {
+        "docu_id": docu_id,
+        "status": "success",
+        "op_result": op_result,
+    }
