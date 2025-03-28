@@ -68,3 +68,12 @@ class OpConfig(BaseModel):
 
         # Pydantic无法严格校验Variables
         arbitrary_types_allowed = True
+
+
+# 定义前端传入算子配置
+class OpConfigFront(BaseModel):
+
+    cell_type: CellType
+    op_name: str
+    parameters: dict | None
+    variables: dict[str, list[str]] | None
