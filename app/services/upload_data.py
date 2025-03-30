@@ -155,7 +155,15 @@ async def upload_data(
 
     # 生成数据块ID
     random_id = uuid4().hex
-    cell_id = f"data_{random_id}"
+    time_stamp = hex(
+        int(
+            str(time.time()).replace(
+                ".", ""
+            )
+        )
+    )
+
+    cell_id = f"data_{random_id}_{time_stamp}"
 
     # 读取数据
     if file_extension == ".xlsx":
