@@ -55,9 +55,10 @@ class PlotterNotFoundError(Exception):
 # 依赖缺失异常
 class DependencyError(Exception):
 
-    def __init__(self, dependency_name):
-        self.dependency_name = dependency_name
-        super().__init__(
+    def __init__(self, dependency_name): 
+
+        self.dependency_name = dependency_name # pragma: no cover
+        super().__init__(                      # pragma: no cover
             f"未找到依赖 '{dependency_name}'。\n" + \
             f"Dependency '{dependency_name}' not found."
         )
@@ -70,16 +71,6 @@ class DocuNotFoundError(Exception):
         super().__init__(
             f"当前无文档。\n" + \
             f"Docu not Found."
-        )
-
-
-# 算子执行失败异常
-class OperatorRunError(Exception):
-
-    def __init__(self, object_name):
-        super().__init__(
-            f"算子 '{object_name}' 执行失败。\n" + \
-            f"Failed to run operator '{object_name}'."
         )
 
 
