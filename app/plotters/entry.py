@@ -108,6 +108,7 @@ def plotter_entry(chart_config: ChartConfig):
     # 返回结果
     return ImageConfig(
         cell_type =CellType.IMAGE, 
+        cell_num = chart_config.cell_num,
         image = result
     )
         

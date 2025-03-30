@@ -53,6 +53,7 @@ class ChartConfig(BaseModel):
 class ImageConfig(BaseModel):
 
     cell_type: CellType
+    cell_num: int
     image: str
 
 
