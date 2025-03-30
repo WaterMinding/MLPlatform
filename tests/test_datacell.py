@@ -458,6 +458,9 @@ class TestDataCell(unittest.TestCase):
 
     # 测试获取数据配置方法
     def test_get_config(self):
+
+        # 输出测试信息
+        print("\n测试数据块类：获取数据配置方法")
         
         # 检查数据配置
         self.assertEqual(
