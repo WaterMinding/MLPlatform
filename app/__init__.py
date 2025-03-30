@@ -18,7 +18,7 @@ from .services import run_op
 from .services import fifolock
 from .services import open_docu
 from .services import initialize
-from .services import import_data
+from .services import select_data
 from .services import upload_data
 from .services import delete_data
 from .services import get_pool_meta

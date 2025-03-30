@@ -31,7 +31,7 @@ from app import initialize
 from app import ImageConfig
 from app import upload_data
 from app import delete_data
-from app import import_data
+from app import select_data
 from app import get_pool_meta
 from app import DataNotFoundError
 from app import DocuNotFoundError
@@ -41,7 +41,6 @@ from app import VariableNotFoundError
 FILE_PATH = os.path.abspath(__file__)
 TESTS = os.path.dirname(FILE_PATH)
 ROOT = os.path.dirname(TESTS)
-print(ROOT)
 
 
 # 服务层测试类
@@ -532,7 +531,7 @@ class TestServices(unittest.TestCase):
         )
 
     # 测试导入数据服务
-    def test_import_data(self):
+    def test_select_data(self):
 
         # 输出测试信息
         print("\n测试服务层：导入数据服务")
@@ -546,7 +545,7 @@ class TestServices(unittest.TestCase):
         with self.assertRaises(DocuNotFoundError):
 
             asyncio.run(
-                import_data(
+                select_data(
                     self.test_id,
                     None
                 )
@@ -556,7 +555,7 @@ class TestServices(unittest.TestCase):
         with self.assertRaises(DataNotFoundError):
 
             asyncio.run(
-                import_data(
+                select_data(
                     '12345',
                     data_pool
                 )
@@ -564,7 +563,7 @@ class TestServices(unittest.TestCase):
 
         # 测试导入数据
         asyncio.run(
-            import_data(
+            select_data(
                 self.test_id,
                 data_pool
             )

@@ -6,14 +6,17 @@ import tomllib as toml
 # 导入第三方库模块
 from fastapi import File
 from fastapi import FastAPI
+from fastapi import Request
 from fastapi import UploadFile
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 # 导入自定义模块
 from .data import DataPool
 from .services import run_op
 from .services import initialize
 from .services import open_docu
-from .services import import_data
+from .services import select_data
 from .services import upload_data
 from .services import get_pool_meta
 from .services import delete_data
@@ -54,9 +57,23 @@ with open(
     tempfile.tempdir = cache_path
 
 
+# 配置静态文件服务
+app.mount(
+    "/static",
+    StaticFiles(
+        directory = f"{APP_ROOT}/templates"
+    ),
+    name="static"
+)
+
+templates = Jinja2Templates(
+    directory = f"{APP_ROOT}/templates"
+)
+
+
 # 根路由接口
 @app.get("/")
-async def root():
+async def root(request: Request):
 
     global POOL_PATH
 
@@ -73,6 +90,11 @@ async def root():
             "status": "error", 
             "message": str(e),
         }
+    
+    return templates.TemplateResponse(
+        "main.html",
+        {"request": request}
+    )
     
 
 # 新建文档接口
@@ -127,7 +149,7 @@ async def open_docu_api(
 
         pool_config = DATA_POOL.get_config()
 
-    except Exception as e:
+    except Exception as e: 
 
         return {
             "docu_id": docu_id,
@@ -143,11 +165,11 @@ async def open_docu_api(
     }
 
 
-# 导入数据接口
+# 选择数据接口
     # 查询参数：docu_id - 文档临时ID
     # 查询参数：cell_id - 数据块ID
 @app.patch("/datapool/runtime")
-async def import_data_api(
+async def select_data_api(
     docu_id: str,
     cell_id: str,
 ):
@@ -157,7 +179,7 @@ async def import_data_api(
     # 调用导入数据服务
     try:
 
-        data_config = await import_data(
+        data_config = await select_data(
             data_pool = DATA_POOL,
             cell_id = cell_id,
         )
