@@ -206,7 +206,8 @@ class DataCell:
             var.owner_id = self.__cell_id
             
             # 如果变量名重复，调整新变量名
-            while var.var_name in self.__var_dict:
+            while var.var_name in self.__var_dict or \
+                var.var_name == 'CONNECT_ROW_ID':
 
                 # 判断新变量名末尾是否包含(n)，其中n为正整数
                 pattern  = r'\([1-9]\d*\)$'

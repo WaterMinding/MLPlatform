@@ -32,7 +32,8 @@ def remove_dup(columns):
 
         name = columns[iterator]
 
-        while name in columns[: iterator]:
+        while name in columns[: iterator] or \
+            name == 'CONNECT_ROW_ID':
 
             # 判断列名末尾是否包含(n)，其中n为正整数
             pattern  = r'\([1-9]\d*\)$'
@@ -145,7 +146,7 @@ async def upload_data(
     pool_meta,
 ):
     
-    print('数据上传启动...')
+    #print('数据上传启动...')
     start = time.time()
 
     # 获取文件名与扩展名
@@ -246,6 +247,6 @@ async def upload_data(
             ).df()
     
     end = time.time()
-    print('数据保存完成\n',f"{end - start} 秒")
+    #print('数据保存完成\n',f"{end - start} 秒")
 
     return new_meta.values[0].tolist()
