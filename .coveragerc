@@ -1,2 +1,2 @@
 [report]
-omit = test_op.py, test_plotter.py
+omit = test_op.py, test_plotter.py, test_op2.py,

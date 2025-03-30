@@ -25,13 +25,12 @@ async def open_docu(
         pool_meta
     )
 
-    # 初始化数据缺失列表
-    missing_data = []
+    # 初始化数据缺失字典
+    missing_data = {}
 
-    # 将文档配置中的数据传入运行时数据池
     data_list = docu_config.data_list
 
-    # 获取数据池元数据表
+    # 获取数据池元信息表
     async with pool_lock:
         
         with connect(pool_path) as conn:
@@ -40,19 +39,20 @@ async def open_docu(
                 pool_meta
             ).df()
 
-            meta_dict = meta_table.to_dict()
+            meta_list = meta_table['cell_id'].tolist()
 
     # 初始化运行时数据池
     for data_config in data_list:
 
-        if data_config.cell_id in meta_dict:
+        if data_config.cell_id in meta_list:
 
             datapool.add_cell(data_config)
         
         else:
 
-            missing_data.append(
+            missing_data[
                 data_config.cell_id
-            )
+            ] = data_config.cell_name
+                
     
     return datapool, missing_data

@@ -85,6 +85,7 @@ class TestDataPool(unittest.TestCase):
             \n测试运行时数据池类：构造方法 \
             \n测试运行时数据池类：获取数据池文件路径方法 \
             \n测试运行时数据池类：获取数据块字典方法 \
+            \n测试运行时数据池类：获取数据池文件元信息表名称方法 \
             "
         )
 
@@ -115,6 +116,9 @@ class TestDataPool(unittest.TestCase):
 
         # 测试数据池文件路径
         self.assertEqual(pool.pool_path,self.pool_path)
+
+        # 测试数据池文件元信息表
+        self.assertEqual(pool.meta_name,self.meta_name)
 
         # 获取数据块字典
         cell_dict = pool.cell_dict

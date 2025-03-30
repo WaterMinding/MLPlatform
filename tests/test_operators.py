@@ -131,8 +131,11 @@ class Test_op_entry(unittest.TestCase):
         # 构造测试变量
         var_1 = Variable('var1:quan:data12138')
         var_2 = Variable('var2:quan:data12138')
+        var_3 = Variable('var3:quan:data12138')
+
         var_1.register = DF({'var1': [1, 2, 3, 4, 5]})
         var_2.register = DF({'var2': [1, 2, 3, 4, 5]})
+        var_3.register = DF({'var3': [1, 2, 3, None, 5]})
 
         # 构造测试变量字典
         var_dict = {'X': [var_1], 'Y': [var_2]}
@@ -203,6 +206,35 @@ class Test_op_entry(unittest.TestCase):
 
         # 检查输出的数据结果是否正确
         self.assertEqual(data, None)
+
+        # 传入 X 含缺失值的算子配置
+        with self.assertRaises(ValueError):
+            op_entry(
+                OpConfig(
+                    cell_type = CellType.OP,
+                    op_name = 'LinearRegression', 
+                    parameters = None, 
+                    variables = {
+                        'X': [var_3],
+                        'Y': [var_2]
+                    }
+                )
+            )
+        
+        # 传入 Y 含缺失值的算子配置
+        with self.assertRaises(ValueError):
+            op_entry(
+                OpConfig(
+                    cell_type = CellType.OP,
+                    op_name = 'LinearRegression',
+                    parameters = None,
+                    variables = {
+                        'X': [var_1],
+                        'Y': [var_3]
+                    }
+                )
+            )
+
 
         # 输出结果
         #print(results)

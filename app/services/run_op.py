@@ -51,7 +51,13 @@ async def run_op(
                 owner_id, 
             )
 
-            var = data_cell.get_var(var_name)
+            try:
+                
+                var = data_cell.get_var(var_name)
+            
+            except Exception as e:
+                
+                raise e
 
             area[iterator] = var
 
@@ -102,14 +108,14 @@ async def run_op(
                 data_cell = data_pool.get_cell(
                     var.owner_id
                 )
-
+                
                 if var.usage == VarUsage.REPLACE:
 
-                    data_cell.replace_var([var.value])
+                    data_cell.replace_var([var])
 
                 elif var.usage == VarUsage.APPEND:
 
-                    data_cell.append_var([var.value])
+                    data_cell.append_var([var])
             
                 else:
 

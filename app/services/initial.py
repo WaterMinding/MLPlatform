@@ -1,5 +1,6 @@
 # 导入标准库模块
 import os
+import platform
 import subprocess
 import tomllib as toml
 
@@ -15,6 +16,7 @@ APP_ROOT = os.path.dirname(
         os.path.abspath(__file__)
     )
 )
+
 
 
 # 检查VC++依赖函数
@@ -44,12 +46,12 @@ def check_vc_redist(version:float | str):
         )
 
         # 如果命令返回码为0，说明找到了注册表项
-        if result.returncode == 0:
+        if result.returncode == 0: 
             return True
-        else:
+        else: # pragma: no cover
             return False
 
-    except Exception as e:
+    except Exception as e: # pragma: no cover
         print(f"查询过程中出现错误: {e}")
         return False
 
@@ -61,10 +63,14 @@ def check_vc_redist(version:float | str):
 async def initialize(pool_meta: str):
 
     # 检查Visual C++ Redistributable是否安装
-    if not check_vc_redist("14.0"):
-        raise DependencyError(
-            "Visual C++ Redistributable"
-        )        
+    if platform.system() == "Windows":
+        
+        if not check_vc_redist("14.0") and \
+            not check_vc_redist("17.0"):
+            
+            raise DependencyError(
+                "Visual C++ Redistributable"
+            ) # pragma: no cover        
 
     # 读取数据池文件路径
     with open(
@@ -74,6 +80,7 @@ async def initialize(pool_meta: str):
         config = toml.load(file)
     
     pool_path = config['data_pool_path']
+    cache_path = config['data_cache_path']
 
     # 如果数据池文件不存在，则创建之
     if not os.path.exists(pool_path):
@@ -88,6 +95,11 @@ async def initialize(pool_meta: str):
         with duckdb.connect(pool_path) as conn:
 
             pass # pragma: no cover
+    
+    # 如果缓存文件夹不存在，则创建之
+    if not os.path.exists(cache_path):
+
+        os.makedirs(cache_path,exist_ok = True)
     
     # 初始化数据池文件元信息表
     async with pool_lock:
