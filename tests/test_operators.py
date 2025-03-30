@@ -156,6 +156,11 @@ class Test_op_entry(unittest.TestCase):
             'var2': [1, 2, 3, 4, 5]
         })
 
+        correct_chart_2 = DF({
+            'var1': [1, 5],
+            'var2': [1, 5]
+        })
+
         # 获取文本结果
         text = results.text_list
 
@@ -188,7 +193,7 @@ class Test_op_entry(unittest.TestCase):
         )
 
         self.assertTrue(
-            correct_chart.equals(
+            correct_chart_2.equals(
                 chart[0].elem_list[0].params
             )
         )

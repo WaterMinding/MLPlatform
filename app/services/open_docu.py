@@ -54,5 +54,4 @@ async def open_docu(
                 data_config.cell_id
             ] = data_config.cell_name
                 
-    
     return datapool, missing_data

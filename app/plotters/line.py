@@ -48,10 +48,11 @@ class Line:
             self.params[
                 self.params.columns[0]
             ],
-
             self.params[
                 self.params.columns[1]
             ],
+            color = 'orange',
+            linewidth = 3
         )
 
         # 显示图例

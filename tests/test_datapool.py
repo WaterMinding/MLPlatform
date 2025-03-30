@@ -14,7 +14,6 @@ FILE_PATH = os.path.abspath(__file__)
 # 确定项目根目录
 TESTS = os.path.dirname(FILE_PATH)
 ROOT = os.path.dirname(TESTS)
-print(ROOT)
 
 # 添加项目根目录到系统路径
 sys.path.append(ROOT)

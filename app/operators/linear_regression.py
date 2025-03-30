@@ -77,22 +77,42 @@ class LR:
             text = formula
         )
 
-        # 构造元素数据
-        elem_data = pd.concat(
+        # 构造散点元素数据
+        scatter_data = pd.concat(
             [self.X_data, self.Y_data],
+            axis=1
+        )
+
+        # 构造直线元素数据
+        min_X_id = self.X_data.idxmin().to_list()[0]
+        max_X_id = self.X_data.idxmax().to_list()[0]
+
+        df_X = self.X_data.iloc[
+            [min_X_id, max_X_id]
+        ].reset_index(drop=True)
+
+        df_Y = DF(self.model.predict(df_X))
+        df_Y.columns = self.Y_data.columns
+        df_Y[df_Y.columns[0]] = \
+        df_Y[df_Y.columns[0]].astype(
+            self.Y_data[df_Y.columns[0]].dtype
+        )
+        
+        line_data = pd.concat(
+            [df_X, df_Y],
             axis=1
         )
 
         # 构造线配置
         line_config = ElemConfig(
             elem_type = 'Line',
-            params = elem_data
+            params = deepcopy(line_data)
         )
 
         # 构造散点配置
         scatter_config = ElemConfig(
             elem_type = 'Scatter',
-            params = deepcopy(elem_data)
+            params = deepcopy(scatter_data)
         )
 
         # 构造图表配置
