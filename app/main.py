@@ -72,7 +72,10 @@ templates = Jinja2Templates(
 
 
 # 根路由接口
-@app.get("/")
+@app.get(
+    path = "/", 
+    description = "全局初始化"
+)
 async def root(request: Request):
 
     global POOL_PATH
@@ -99,7 +102,10 @@ async def root(request: Request):
 
 # 新建文档接口
     # 查询参数：docu_id - 文档临时ID
-@app.post("/docu/new")
+@app.post(
+    path = "/docu/new", 
+    description = "新建文档"
+)
 async def new_docu_api(docu_id: str):
 
     global DATA_POOL
@@ -129,7 +135,10 @@ async def new_docu_api(docu_id: str):
 
 # 打开文档接口
     # 查询参数：docu_id - 文档临时ID
-@app.post("/docu/file")
+@app.post(
+    path = "/docu/file", 
+    description = "打开文档"
+)
 async def open_docu_api(
     docu_id: str,
     docu_config: DocuConfig,
@@ -168,7 +177,10 @@ async def open_docu_api(
 # 选择数据接口
     # 查询参数：docu_id - 文档临时ID
     # 查询参数：cell_id - 数据块ID
-@app.patch("/datapool/runtime")
+@app.patch(
+    path = "/datapool/runtime", 
+    description = "选择数据"
+)
 async def select_data_api(
     docu_id: str,
     cell_id: str,
@@ -204,7 +216,10 @@ async def select_data_api(
 # 上传数据接口
     # 查询参数：docu_id - 文档临时ID
     # 请求：file - 上传的文件
-@app.patch("/datapool/file")
+@app.patch(
+    path = "/datapool/file",
+    description = "上传数据"
+)
 async def upload_file_api(
     docu_id: str,
     file: UploadFile = File(...),
@@ -236,7 +251,10 @@ async def upload_file_api(
 
 # 获取数据池文件元信息接口
     # 查询参数：docu_id - 文档临时ID
-@app.get("/datapool/file/meta")
+@app.get(
+    path = "/datapool/file/meta",
+    description = "获取数据池文件元信息"
+)
 async def get_pool_meta_api(
     docu_id: str,
 ):
@@ -267,7 +285,10 @@ async def get_pool_meta_api(
 # 删除数据池文件数据接口
     # 查询参数：docu_id - 文档临时ID
     # 查询参数：cell_id - 待删除数据库ID
-@app.delete("/datapool/file/cell")
+@app.delete(
+    path = "/datapool/file/cell",
+    description = "删除数据池文件数据"
+)
 async def delete_pool_file_api(
     docu_id: str,
     cell_id: str,
@@ -300,7 +321,10 @@ async def delete_pool_file_api(
 # 算子执行接口
     # 查询参数：docu_id - 文档临时ID
     # 请求体：op_config - 算子配置
-@app.post("/op")
+@app.post(
+    path = "/op",
+    description = "算子执行"
+)
 async def run_op_api(
     docu_id: str,
     op_config: OpConfigFront,
